@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+// import 'package:sqflite/sqflite.dart'; // UNCOMMENT THIS FOR DB
+// import 'package:path/path.dart';      // UNCOMMENT THIS FOR DB
 
 class AppDatabase {
-  Database? _db;
+  // Database? _db; // UNCOMMENT THIS FOR DB
   final String _dictionaryTableName = "Dictionary";
   final String _colWord = "word";
 
@@ -23,6 +23,7 @@ class AppDatabase {
   static final AppDatabase instance = AppDatabase._constructor();
   AppDatabase._constructor();
 
+  /* UNCOMMENT THIS BLOCK FOR DB
   Future<Database> get database async {
     if (_db != null) return _db!;
 
@@ -64,8 +65,11 @@ class AppDatabase {
     );
     return database;
   }
+  */
 
   Future<List<String>> getAllWords() async {
+    // --- DATABASE VERSION (COMMENTED OUT) ---
+    /*
     final db = await database;
     final resultQuery = await db.query(_dictionaryTableName);
     List<String> result = [];
@@ -87,6 +91,11 @@ class AppDatabase {
       print("database is used");
     }
     return result;
+    */
+
+    // --- ASSET ONLY VERSION ---
+    print("Asset is used (Database bypassed)");
+    return await readLinesFromAssets("assets/factory_dictionary.txt");
   }
 
   // utf8.decode ensures that Khmer characters (which are multi-byte) are never
@@ -105,6 +114,8 @@ class AppDatabase {
   }
 
   Future<List<Sample>> getAllSamples() async {
+    // --- DATABASE VERSION (COMMENTED OUT) ---
+    /*
     final db = await database;
     final resultQuery = await db.query(_sampleTableName);
     List<Sample> result = [];
@@ -112,5 +123,10 @@ class AppDatabase {
       result.add(Sample.fromMap(record));
     }
     return result;
+    */
+
+    // --- ASSET ONLY VERSION (PLACEHOLDER) ---
+    print("Samples requested (Database bypassed - returning empty list)");
+    return [];
   }
 }
