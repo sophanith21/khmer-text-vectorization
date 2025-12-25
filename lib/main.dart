@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/app_theme.dart';
 import 'package:khmer_text_vectorization/data/app_database.dart';
+import './ui/navigation.dart';
+import './ui/searchBar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: Scaffold(
         appBar: AppBar(title: Text("Vectorize Text")),
