@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/data/app_database.dart';
+import './ui/navigation.dart';
+import './ui/searchBar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,13 +20,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: Scaffold(
-        body: ListView(
-          children: [
-            ...list.map((e) => Text(e, style: TextStyle(color: Colors.black))),
-          ],
-        ),
+        body: Container(child: Search(allitems: list)),
+        // ListView(
+        //   children: [
+        //     Expanded(child: Search(allitems: list)),
+        //     ...list.map((e) => Text(e, style: TextStyle(color: Colors.black))),
+        //   ],
+        // ),
+        bottomNavigationBar: Navigation(),
       ),
     );
   }

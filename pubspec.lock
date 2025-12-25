@@ -75,6 +75,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  idb_shim:
+    dependency: transitive
+    description:
+      name: idb_shim
+      sha256: b26b2ad126be411d0072d1dfc4d97ebe02121a863e4eadc635b511b9bc138489
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.1+2"
   leak_tracker:
     dependency: transitive
     description:
@@ -155,6 +163,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  sembast:
+    dependency: "direct main"
+    description:
+      name: sembast
+      sha256: "139cf71496105de32e7a08a4e3a1ead0f81c4a616ec9703ed07e8f0d10cdd505"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.8.6"
+  sembast_web:
+    dependency: "direct main"
+    description:
+      name: sembast_web
+      sha256: df69191fc035101894156d714e029bbc5706394df2af63e23c859f68fbdfb4ec
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -272,6 +296,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.0.2"
+  web:
+    dependency: transitive
+    description:
+      name: web
+      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
 sdks:
   dart: ">=3.10.1 <4.0.0"
   flutter: ">=3.24.0"
