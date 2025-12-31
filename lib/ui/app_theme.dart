@@ -36,6 +36,7 @@ class AppTheme {
           fontSize: 36,
           fontWeight: FontWeight.w700,
           fontFamily: 'Roboto',
+          shadows: [Shadow(color: Color(0xFFE2C8A3), offset: Offset(1, 1))],
         ),
         iconTheme: IconThemeData(color: primaryBlack),
       ),
@@ -46,7 +47,6 @@ class AppTheme {
         selectionHandleColor: primaryBlack,
       ),
 
-      // Re-applying your specialized component themes
       inputDecorationTheme: _inputTheme(),
       elevatedButtonTheme: _buttonTheme(),
     );
@@ -62,7 +62,7 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: lightGreyBorder),
+        borderSide: const BorderSide(color: primaryBlack),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -78,7 +78,7 @@ class AppTheme {
         foregroundColor: surfaceWhite,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
       ),
     );
   }

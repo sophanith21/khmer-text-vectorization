@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:khmer_text_vectorization/app_theme.dart';
 import 'package:khmer_text_vectorization/data/app_database.dart';
-import 'package:khmer_text_vectorization/ui/Screens/vectorize_screen.dart';
-import './ui/navigation.dart';
+import 'package:khmer_text_vectorization/model/sample.dart';
+import 'package:khmer_text_vectorization/ui/app_theme.dart';
+import 'package:khmer_text_vectorization/ui/screens/vectorize/vectorize_screen.dart';
+import 'ui/widgets/navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final db = AppDatabase.instance;
 
-  List<String> list = await db.getAllWords();
-  List<Characters> wordsList = [];
-  for (String wordString in list) {
-    Characters word = Characters(wordString);
-    wordsList.add(word);
-  }
-
-  runApp(MyApp(dictionary: wordsList.toSet()));
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, required this.dictionary});
-  final Set<Characters> dictionary;
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -32,6 +24,16 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       currentScreen = newScreen;
     });
+  }
+
+  void switchTab(ScreenType newScreen) {
+    setState(() {
+      currentScreen = newScreen;
+    });
+  }
+
+  Future<List<Sample>> get samples async {
+    return await AppDatabase.instance.getAllSamples();
   }
 
   String get appBarTitle {
@@ -50,19 +52,34 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Khmer Text Vectorization',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: Scaffold(
         appBar: AppBar(title: Text(appBarTitle)),
-        body: IndexedStack(
-          index: currentScreen.index,
-          children: [
-            Placeholder(),
-            VectorizeScreen(),
-            Placeholder(),
-            Placeholder(),
-          ],
+        body: SafeArea(
+          child: IndexedStack(
+            index: currentScreen.index,
+            children: [
+              Placeholder(),
+              VectorizeScreen(switchTab: switchTab),
+
+              FutureBuilder(
+                future: samples,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  final samples = snapshot.data ?? [];
+                  return ListView(
+                    children: [...samples.map((e) => Text(e.name))],
+                  );
+                },
+              ),
+              Placeholder(),
+            ],
+          ),
         ),
 
         bottomNavigationBar: SafeArea(
