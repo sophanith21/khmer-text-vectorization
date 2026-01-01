@@ -14,6 +14,10 @@ class SegmentingService {
     dictionary.addAll(list.map((wordString) => Characters(wordString)).toSet());
   }
 
+  Future<void> initDictionary() async {
+    await _getAllWords();
+  }
+
   void addNewWord(Characters newWord) {
     dictionary.add(newWord);
     AppDatabase.instance.saveNewWord(newWord.string);

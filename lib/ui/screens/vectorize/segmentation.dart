@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:khmer_text_vectorization/data/app_database.dart';
 import 'package:khmer_text_vectorization/model/segment.dart';
 import 'package:khmer_text_vectorization/model/services/segmenting_service.dart';
 import 'package:khmer_text_vectorization/ui/widgets/custom_dialog.dart';
@@ -309,10 +308,22 @@ class _TextBoxState extends State<TextBox> {
       builder: (context, candidateData, rejectedData) {
         return LongPressDraggable<int>(
           data: widget.index,
-          feedback: SegmnetedBox(boxColor: boxColor, label: widget.label),
+          childWhenDragging: Opacity(
+            opacity: 0.3,
+            child: SegmentedBox(boxColor: boxColor, label: widget.label),
+          ),
+          feedback: Material(
+            color: Colors.transparent,
+            child: SegmentedBox(
+              boxColor: HSLColor.fromColor(
+                boxColor,
+              ).withLightness(0.6).toColor(),
+              label: widget.label,
+            ),
+          ),
           child: GestureDetector(
             onTap: () => {onTap(context)},
-            child: SegmnetedBox(boxColor: boxColor, label: widget.label),
+            child: SegmentedBox(boxColor: boxColor, label: widget.label),
           ),
         );
       },
@@ -391,7 +402,7 @@ class _ManualSegmentDialogState extends State<ManualSegmentDialog> {
           ),
         ),
         const SizedBox(height: 20),
-        SegmnetedBox(boxColor: widget.boxColor, label: widget.label),
+        SegmentedBox(boxColor: widget.boxColor, label: widget.label),
         const SizedBox(height: 15),
         SizedBox(
           height: 120,
@@ -415,7 +426,7 @@ class _ManualSegmentDialogState extends State<ManualSegmentDialog> {
             children: [
               if (textFieldController.text != widget.label)
                 ...newSegmentedTexts.map(
-                  (e) => SegmnetedBox(
+                  (e) => SegmentedBox(
                     boxColor: widget.invertBoxColor,
                     label: e.toString(),
                   ),
@@ -502,9 +513,9 @@ class FalseAlarmDialog extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: 15,
             children: [
-              SegmnetedBox(boxColor: boxColor, label: widget.label),
+              SegmentedBox(boxColor: boxColor, label: widget.label),
               Icon(Icons.arrow_right_alt),
-              SegmnetedBox(boxColor: invertBoxColor, label: widget.label),
+              SegmentedBox(boxColor: invertBoxColor, label: widget.label),
             ],
           ),
         ),
@@ -562,8 +573,8 @@ class FalseAlarmDialog extends StatelessWidget {
   }
 }
 
-class SegmnetedBox extends StatelessWidget {
-  const SegmnetedBox({super.key, required this.boxColor, required this.label});
+class SegmentedBox extends StatelessWidget {
+  const SegmentedBox({super.key, required this.boxColor, required this.label});
 
   final Color boxColor;
   final String label;
@@ -586,6 +597,7 @@ class SegmnetedBox extends StatelessWidget {
       child: Text(
         text,
         style: GoogleFonts.kantumruyPro(
+          decoration: TextDecoration.none,
           fontSize: 14,
           fontWeight: FontWeight.w500,
         ),

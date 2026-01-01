@@ -1,66 +1,14 @@
-// import 'package:flutter/material.dart';
-// import 'package:khmer_text_vectorization/data/app_database.dart';
-// import 'ui/widget/navigation.dart';
-// import 'ui/widget/vectorizedSearch.dart';
-
-// import 'ui/page/dashboard.dart';
-// import 'ui/page/collection.dart';
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   final db = AppDatabase.instance;
-
-//   List<String> list = await db.getAllWords();
-//   print("list $list");
-//   runApp(MyApp(list: list.toSet()));
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key, required this.list});
-//   final Set<String> list;
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-//       home: Scaffold(
-//         body: Collection(list: list),
-//         // Dashboard(),
-
-//         // Container(child: Search(allitems: list)),
-
-//         // ListView(
-//         //   children: [
-//         //     Expanded(child: Search(allitems: list)),
-//         //     ...list.map((e) => Text(e, style: TextStyle(color: Colors.black))),
-//         //   ],
-//         // ),
-//         bottomNavigationBar: Navigation(),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/data/app_database.dart';
-<<<<<<< HEAD
 import 'package:khmer_text_vectorization/model/sample.dart';
-import 'package:khmer_text_vectorization/ui/Screens/vectorize_screen.dart';
-
-import './data/samples.dart';
-
-import './ui/widget/navigation.dart';
-import 'ui/Screens/dashboard.dart';
-import 'ui/Screens/collection.dart';
-import 'ui/Screens/settings.dart';
-=======
-import 'package:khmer_text_vectorization/model/sample.dart';
+import 'package:khmer_text_vectorization/model/services/segmenting_service.dart';
 import 'package:khmer_text_vectorization/ui/app_theme.dart';
+import 'package:khmer_text_vectorization/ui/screens/collection.dart';
+import 'package:khmer_text_vectorization/ui/screens/dashboard.dart';
+import 'package:khmer_text_vectorization/ui/screens/dictionary.dart';
+import 'package:khmer_text_vectorization/ui/screens/settings.dart';
 import 'package:khmer_text_vectorization/ui/screens/vectorize/vectorize_screen.dart';
-import 'ui/widgets/navigation.dart';
->>>>>>> 2826d7d79fc664ce1b2179dc9c4ab132258f738e
+import 'package:khmer_text_vectorization/ui/widgets/navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,14 +31,13 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void switchTab(ScreenType newScreen) {
-    setState(() {
-      currentScreen = newScreen;
-    });
-  }
-
   Future<List<Sample>> get samples async {
     return await AppDatabase.instance.getAllSamples();
+  }
+
+  Future<Set<Characters>> get dictionary async {
+    await SegmentingService.instance.initDictionary();
+    return SegmentingService.instance.dictionary;
   }
 
   String get appBarTitle {
@@ -113,56 +60,34 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: Scaffold(
-<<<<<<< HEAD
-        appBar: AppBar(
-          title: Text(
-            appBarTitle,
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  blurRadius: 0,
-                  color: Color(0xFFE2C8A3),
-                  offset: Offset(3, 3),
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: IndexedStack(
-          index: currentScreen.index,
-          children: [
-            Dashboard(allSamples: widget.vetorizes),
-            VectorizeScreen(),
-            Collection(
-              allSamples: widget.vetorizes,
-              onVectoriezedScreen: () => onTabClick(ScreenType.vectorize),
-            ),
-            Settings(list: widget.dictionary),
-=======
         appBar: AppBar(title: Text(appBarTitle)),
         body: SafeArea(
           child: IndexedStack(
             index: currentScreen.index,
             children: [
-              Placeholder(),
-              VectorizeScreen(switchTab: switchTab),
+              CustomFutureBuilder(
+                futureData: samples,
+                builder: (context, samples) {
+                  return Dashboard(allSamples: samples);
+                },
+              ),
 
-              FutureBuilder(
-                future: samples,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-
-                  final samples = snapshot.data ?? [];
-                  return ListView(
-                    children: [...samples.map((e) => Text(e.name))],
+              VectorizeScreen(switchTab: onTabClick),
+              CustomFutureBuilder(
+                futureData: samples,
+                builder: (context, samples) {
+                  return Collection(
+                    allSamples: samples,
+                    onVectoriezedScreen: () => onTabClick(ScreenType.vectorize),
                   );
                 },
               ),
-              Placeholder(),
+              CustomFutureBuilder(
+                futureData: dictionary,
+                builder: (context, dictionary) {
+                  return Settings(list: dictionary);
+                },
+              ),
             ],
           ),
         ),
@@ -174,6 +99,31 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomFutureBuilder extends StatelessWidget {
+  const CustomFutureBuilder({
+    super.key,
+    required this.futureData,
+    required this.builder,
+  });
+  final Future<dynamic> futureData;
+  final Widget Function(BuildContext, dynamic) builder;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: futureData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        final futureData = snapshot.data ?? [];
+        return builder(context, futureData);
+      },
     );
   }
 }

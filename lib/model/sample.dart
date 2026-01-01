@@ -11,7 +11,7 @@ class Sample {
   final double quality;
   final DateTime createdAt;
 
-  final List<TopicTag>? topicTags;
+  List<TopicTag>? topicTags;
 
   Future<List<Characters>?> get segmentedText async {
     if (id != null) {

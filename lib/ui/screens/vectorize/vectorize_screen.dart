@@ -36,12 +36,18 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
 
   Future<void> onVectorize(BuildContext context) async {
     final startTime = DateTime.now();
+    int? stanceLabeInt = stanceLabel == null
+        ? null
+        : stanceLabel!
+        ? 1
+        : 0;
 
     Sample newSample = Sample(
       name: nameController.text,
       description: descriptionController.text,
       originalInput: currentRawText,
       quality: score,
+      stanceLabel: stanceLabeInt,
       topicTags: topicTags.toList(),
     );
 

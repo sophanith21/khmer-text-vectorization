@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
-import 'vectorizedTextBox.dart';
+import 'vectorized_text_box.dart';
 
 class Filterdate extends StatelessWidget {
   const Filterdate({
@@ -24,6 +24,7 @@ class Filterdate extends StatelessWidget {
               dateGroup.toString().split(" ")[0],
         )
         .toList();
+
     if (filterSamples.isEmpty) {
       return Expanded(
         child: Center(
@@ -47,7 +48,7 @@ class Filterdate extends StatelessWidget {
 
     Widget content = Expanded(
       child: ListView.separated(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(14),
         itemCount: filterSamples.length,
         itemBuilder: (context, index) {
           return VectorizedTextBox(

@@ -221,6 +221,18 @@ class AppDatabase {
       ''');
 
     List<Sample> samples = result.map((e) => Sample.fromMap(e)).toList();
+
+    final topicTagsResult = await db.rawQuery('''
+        SELECT tt.$_colTag as tag, st.sample_id as sampleId, st.tag_id as id FROM $_sampleTopicTagsTable st
+        JOIN $_topicTagsTable tt ON st.tag_id = tt.$_colId
+        ''');
+
+    for (final Sample sample in samples) {
+      final topicTagsMap = topicTagsResult
+          .where((e) => e["sampleId"] == sample.id!)
+          .toList();
+      sample.topicTags = topicTagsMap.map((e) => TopicTag.fromMap(e)).toList();
+    }
     return samples;
   }
 
