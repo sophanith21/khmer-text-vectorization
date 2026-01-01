@@ -1,59 +1,81 @@
-import 'dart:convert';
-
-import 'package:characters/characters.dart';
+import 'package:flutter/material.dart';
+import 'package:khmer_text_vectorization/data/app_database.dart';
+import 'package:khmer_text_vectorization/model/topic_tag.dart';
 
 class Sample {
+  final int? id;
   final String name;
   final String description;
-  final List<Characters> segmentedText;
-  final List<String> topicLabels;
-  late final int stanceLabel;
-  late final DateTime createdAt;
-  late final double quality;
+  final String originalInput;
+  final int? stanceLabel;
+  final double quality;
+  final DateTime createdAt;
+
+  List<TopicTag>? topicTags;
+
+  Future<List<Characters>?> get segmentedText async {
+    if (id != null) {
+      return await AppDatabase.instance.getSegmentedText(id!);
+    } else {
+      return null;
+    }
+  }
+
+  Future<Map<int, double>?> get tfIdfVector async {
+    if (id != null) {
+      return await AppDatabase.instance.getSampleVector(id!);
+    } else {
+      return null;
+    }
+  }
 
   Sample({
+    this.id,
     required this.name,
     required this.description,
-    required this.segmentedText,
-    required this.stanceLabel,
-    required this.topicLabels,
+    required this.originalInput,
+    this.stanceLabel,
     required this.quality,
     DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now() {
-    if (stanceLabel != 0 && stanceLabel != 1) {
-      throw ArgumentError("Stance Label can only be 0 and 1");
+    this.topicTags,
+  }) : createdAt = createdAt ?? DateTime.now();
+
+  // Converts a Database Row (Map) into a Sample Object
+  factory Sample.fromMap(
+    Map<String, dynamic> map, {
+    List<MapEntry<int, String>>? tags,
+  }) {
+    List<TopicTag> topicTags = [];
+    if (tags != null) {
+      for (final tag in tags) {
+        topicTags.add(TopicTag(id: tag.key, tagName: tag.value));
+      }
     }
 
-    if (quality < 0 || quality > 100) {
-      throw ArgumentError("Quality must be in range 0 to 100");
-    }
+    return Sample(
+      id: map['id'],
+      name: map['name'],
+      description: map['description'] ?? '',
+      originalInput: map['originalInput'],
+      stanceLabel: map['stanceLabel'],
+      quality: (map['quality'] as num).toDouble(),
+      createdAt: map['created_at'] != null
+          ? DateTime.parse(map['created_at'])
+          : DateTime.now(),
+      topicTags: topicTags,
+    );
   }
 
+  // Converts a Sample Object into a Map for Database Insertion
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'description': description,
-      'segmented_text': jsonEncode(
-        segmentedText.map((e) => e.toString()).toList(),
-      ),
-      'topic_labels': jsonEncode(topicLabels),
-      'stance_label': stanceLabel,
-      'created_at': createdAt.toIso8601String(),
+      'originalInput': originalInput,
+      'stanceLabel': stanceLabel,
       'quality': quality,
+      'created_at': createdAt.toIso8601String(),
     };
-  }
-
-  factory Sample.fromMap(Map<String, dynamic> map) {
-    return Sample(
-      name: map['name'],
-      description: map['description'],
-      segmentedText: (jsonDecode(map['segmented_text']) as List)
-          .map((e) => (e as String).characters)
-          .toList(),
-      topicLabels: List<String>.from(jsonDecode(map['topic_labels'])),
-      stanceLabel: map['stance_label'],
-      quality: (map['quality'] as num).toDouble(),
-      createdAt: DateTime.parse(map['created_at']),
-    );
   }
 }

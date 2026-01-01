@@ -33,13 +33,9 @@ dependencies:
   characters: ^1.4.0
   path: ^1.9.1
   sqflite: ^2.4.2
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  google_fonts: ^6.3.3
   flutter_svg: ^2.2.3
   material_symbols_icons: ^4.2892.0
-  google_fonts: ^6.3.3
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +65,14 @@ flutter:
     - assets\icons\dashboard.svg
     - assets\icons\setting.svg
     - assets\icons\vectorize.svg
+
+  fonts:
+    - family: KantumruyPro
+      fonts:
+        - asset: assets/fonts/KantumruyPro-Regular.ttf
+        - asset: assets/fonts/KantumruyPro-Bold.ttf
+          weight: 700
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
-import './dictionary.dart';
-import '../widget/popUp.dart';
+import 'package:khmer_text_vectorization/ui/screens/dictionary.dart';
+import 'package:khmer_text_vectorization/ui/widgets/pop_up.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key, required this.list});

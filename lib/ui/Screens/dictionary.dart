@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widget/search.dart';
-import '../widget/searchResult.dart';
+import 'package:khmer_text_vectorization/ui/widgets/search.dart';
+import 'package:khmer_text_vectorization/ui/widgets/search_result.dart';
 
 class Dictionary extends StatefulWidget {
   const Dictionary({super.key, required this.list});

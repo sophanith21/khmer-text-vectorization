@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './circleGraph.dart';
+import 'circle_graph.dart';
 
 class VectorizedTextBox extends StatelessWidget {
   const VectorizedTextBox({
@@ -18,7 +18,7 @@ class VectorizedTextBox extends StatelessWidget {
   final String vecTitle;
   final String vecDescription;
   final DateTime vecDate;
-  final int vecLabel;
+  final int? vecLabel;
   final double vecQuality;
 
   final bool isSelected;

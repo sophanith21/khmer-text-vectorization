@@ -1,7 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
-import 'package:khmer_text_vectorization/ui/widget/filterDate.dart';
-import '../widget/circleGraph.dart';
+import 'package:khmer_text_vectorization/ui/widgets/filterDate.dart';
+import 'package:khmer_text_vectorization/ui/widgets/circle_graph.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key, required this.allSamples});
@@ -19,7 +21,7 @@ class _DashboardState extends State<Dashboard> {
     final DateTime? dateSelected = await showDatePicker(
       context: context,
       firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
       initialDate: pickDate,
     );
 
@@ -33,7 +35,14 @@ class _DashboardState extends State<Dashboard> {
   void onDateChanges(bool isNext) {
     setState(() {
       if (isNext) {
-        pickDate = pickDate.add(Duration(days: 1));
+        final newDate = pickDate.add(Duration(days: 1));
+
+        final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
+        final compareDate = DateTime(newDate.year, newDate.month, newDate.day);
+        if (!compareDate.isAfter(today)) {
+          pickDate = pickDate.add(Duration(days: 1));
+        }
       } else {
         pickDate = pickDate.subtract(Duration(days: 1));
       }
@@ -54,11 +63,12 @@ class _DashboardState extends State<Dashboard> {
         sum += sample.quality;
         amount++;
       }
+      amount = max(amount, 1);
 
       return sum / amount;
     }
 
-    int allVecText = 50;
+    int allVecText = widget.allSamples.length;
     double allPercentage = calcAvgQuality();
     double allPercentageValue = calcAvgQuality() / 100;
 
@@ -68,29 +78,12 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           spacing: 30,
           children: [
-            //title
-            // Text(
-            //   title,
-            //   style: TextStyle(
-            //     fontSize: 40,
-            //     fontWeight: FontWeight.bold,
-            //     shadows: [
-            //       Shadow(
-            //         blurRadius: 0,
-            //         color: Color(0xFFE2C8A3),
-            //         offset: Offset(3, 3),
-            //       ),
-            //     ],
-            //   ),
-            // ),
             const SizedBox.shrink(),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Column(
                   children: [
-                    //todo: calc total text
                     Text(
                       allVecText.toString(),
                       style: const TextStyle(

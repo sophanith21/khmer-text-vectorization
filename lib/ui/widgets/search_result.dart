@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
-import 'vectorizedTextBox.dart';
+import 'vectorized_text_box.dart';
 
 class Searchresult extends StatelessWidget {
   const Searchresult({
@@ -35,8 +35,8 @@ class Searchresult extends StatelessWidget {
     if (topicSort.isNotEmpty && topicSort != "All" && topicSort != "") {
       filterSamples = filterSamples
           .where(
-            (item) => item.topicLabels.any(
-              (t) => t.toLowerCase() == topicSort.toLowerCase(),
+            (item) => (item.topicTags ?? []).any(
+              (t) => t.tagName.toLowerCase() == topicSort.toLowerCase(),
             ),
           )
           .toList();

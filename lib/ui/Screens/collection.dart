@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:khmer_text_vectorization/data/samples.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
-import 'package:khmer_text_vectorization/ui/widget/popUp.dart';
-import 'package:khmer_text_vectorization/ui/widget/searchResult.dart';
-import 'package:path/path.dart';
-import '../widget/vectorizedTextBox.dart';
-import '../widget/search.dart';
+import 'package:khmer_text_vectorization/model/topic_tag.dart';
+import 'package:khmer_text_vectorization/ui/widgets/pop_up.dart';
+import 'package:khmer_text_vectorization/ui/widgets/search.dart';
+import 'package:khmer_text_vectorization/ui/widgets/search_result.dart';
 
 enum SortType {
   qualityHighToLow,
@@ -72,8 +70,12 @@ class _CollectionState extends State<Collection> {
   List<String> get topic {
     List<String> uniqueTopic = ["All"];
     for (var topicSample in samples) {
-      for (var topicLabels in topicSample.topicLabels) {
-        uniqueTopic.add(topicLabels);
+      for (var topicLabels in topicSample.topicTags ?? []) {
+        String newTopicLabel = "";
+        if (topicLabels is TopicTag) {
+          newTopicLabel = topicLabels.tagName;
+        }
+        uniqueTopic.add(newTopicLabel);
       }
     }
     return uniqueTopic.toSet().toList();
@@ -195,11 +197,15 @@ class _CollectionState extends State<Collection> {
         break;
 
       case SortType.labelGoodToBad:
-        sorted.sort((a, b) => b.stanceLabel.compareTo(a.stanceLabel));
+        sorted.sort(
+          (a, b) => (b.stanceLabel ?? -1).compareTo(a.stanceLabel ?? -1),
+        );
         break;
 
       case SortType.labelBadToGood:
-        sorted.sort((a, b) => a.stanceLabel.compareTo(b.stanceLabel));
+        sorted.sort(
+          (a, b) => (a.stanceLabel ?? -1).compareTo((b.stanceLabel ?? -1)),
+        );
         break;
     }
 
@@ -243,23 +249,6 @@ class _CollectionState extends State<Collection> {
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 20,
           children: [
-            //title
-            // Text(
-            //   title,
-            //   style: TextStyle(
-            //     fontSize: 40,
-            //     fontWeight: FontWeight.bold,
-            //     shadows: [
-            //       Shadow(
-            //         blurRadius: 0,
-            //         color: Color(0xFFE2C8A3),
-            //         offset: Offset(3, 3),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            SizedBox.shrink(),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
