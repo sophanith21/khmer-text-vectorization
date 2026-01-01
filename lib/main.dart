@@ -46,6 +46,7 @@
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/app_theme.dart';
 import 'package:khmer_text_vectorization/data/app_database.dart';
+<<<<<<< HEAD
 import 'package:khmer_text_vectorization/model/sample.dart';
 import 'package:khmer_text_vectorization/ui/Screens/vectorize_screen.dart';
 
@@ -55,6 +56,10 @@ import './ui/widget/navigation.dart';
 import 'ui/Screens/dashboard.dart';
 import 'ui/Screens/collection.dart';
 import 'ui/Screens/settings.dart';
+=======
+import 'package:khmer_text_vectorization/ui/Screens/vectorize_screen.dart';
+import './ui/navigation.dart';
+>>>>>>> 2826d7d79fc664ce1b2179dc9c4ab132258f738e
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +72,7 @@ void main() async {
     wordsList.add(word);
   }
 
+<<<<<<< HEAD
   runApp(MyApp(dictionary: wordsList.toSet(), vetorizes: samples));
 }
 
@@ -75,6 +81,14 @@ class MyApp extends StatefulWidget {
   final Set<Characters> dictionary;
   //!testing
   final List<Sample> vetorizes;
+=======
+  runApp(MyApp(dictionary: wordsList.toSet()));
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key, required this.dictionary});
+  final Set<Characters> dictionary;
+>>>>>>> 2826d7d79fc664ce1b2179dc9c4ab132258f738e
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -108,6 +122,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: Scaffold(
+<<<<<<< HEAD
         appBar: AppBar(
           title: Text(
             appBarTitle,
@@ -134,6 +149,16 @@ class _MyAppState extends State<MyApp> {
               onVectoriezedScreen: () => onTabClick(ScreenType.vectorize),
             ),
             Settings(list: widget.dictionary),
+=======
+        appBar: AppBar(title: Text(appBarTitle)),
+        body: IndexedStack(
+          index: currentScreen.index,
+          children: [
+            Placeholder(),
+            VectorizeScreen(),
+            Placeholder(),
+            Placeholder(),
+>>>>>>> 2826d7d79fc664ce1b2179dc9c4ab132258f738e
           ],
         ),
 
