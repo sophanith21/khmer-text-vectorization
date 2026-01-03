@@ -10,11 +10,15 @@ class DataLabelling extends StatefulWidget {
     required this.onNext,
     required this.updateStance,
     required this.updateTags,
+    required this.initStance,
+    required this.initTopicTags,
   });
   final VoidCallback onBack;
   final VoidCallback onNext;
   final ValueChanged<bool> updateStance;
   final ValueChanged<Set<TopicTag>> updateTags;
+  final bool? initStance;
+  final Set<TopicTag> initTopicTags;
 
   @override
   State<DataLabelling> createState() => _DataLabellingState();
@@ -29,15 +33,16 @@ class _DataLabellingState extends State<DataLabelling> {
   void initState() {
     super.initState();
     _loadInitialSuggestionTags();
+    topicTags = {...widget.initTopicTags};
+    selectedStance = widget.initStance;
   }
 
   void onStanceTap(bool value) {
     setState(() {
       selectedStance = value;
     });
-    if (selectedStance != null) {
-      widget.updateStance(selectedStance!);
-    }
+
+    widget.updateStance(value);
   }
 
   Future<void> _loadInitialSuggestionTags() async {
@@ -223,9 +228,11 @@ class _EditTagsDialogState extends State<EditTagsDialog> {
   }
 
   void onAddInDialog(TopicTag value) {
-    setState(() {
-      currentTopicTags.add(value);
-    });
+    if (value.tagName.isNotEmpty) {
+      setState(() {
+        currentTopicTags.add(value);
+      });
+    }
   }
 
   void onRemoveInDialog(String object) {

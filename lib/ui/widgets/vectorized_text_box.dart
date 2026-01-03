@@ -18,7 +18,7 @@ class VectorizedTextBox extends StatelessWidget {
   final String vecTitle;
   final String vecDescription;
   final DateTime vecDate;
-  final int? vecLabel;
+  final bool? vecLabel;
   final double vecQuality;
 
   final bool isSelected;
@@ -26,7 +26,11 @@ class VectorizedTextBox extends StatelessWidget {
   final VoidCallback? onView;
   final VoidCallback? onSelected;
 
-  String get label => vecLabel == 1 ? "Positive" : "Negative";
+  String get label => vecLabel != null
+      ? vecLabel!
+            ? "Positive"
+            : "Negative"
+      : "No Label              ";
 
   double get qualityValue => vecQuality.roundToDouble() / 100;
 

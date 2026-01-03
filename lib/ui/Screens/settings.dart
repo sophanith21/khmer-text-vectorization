@@ -1,12 +1,16 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:khmer_text_vectorization/model/services/export_import_service.dart';
+import 'package:khmer_text_vectorization/model/services/segmenting_service.dart';
 import 'package:khmer_text_vectorization/ui/screens/dictionary.dart';
 import 'package:khmer_text_vectorization/ui/widgets/pop_up.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class Settings extends StatelessWidget {
-  const Settings({super.key, required this.list});
+  const Settings({super.key, required this.list, required this.refreshData});
+  final VoidCallback refreshData;
 
-  final Set<Characters> list;
+  final Map<Characters, int> list;
 
   void resetDialog(BuildContext context) {
     showDialog(
@@ -15,10 +19,29 @@ class Settings extends StatelessWidget {
         title: "Reset to default",
         content: Column(
           children: [
-            const Text(
-              "The following action wil reset the Dictionary into its freshly downloaded version.",
+            RichText(
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
+              text: TextSpan(
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ), // Default style
+                children: [
+                  const TextSpan(text: "The following action will "),
+                  TextSpan(
+                    text: "reset the entire app",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red[900],
+                    ),
+                  ),
+                  const TextSpan(text: " into its "),
+                  const TextSpan(
+                    text: "freshly downloaded version.",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 50),
@@ -34,9 +57,12 @@ class Settings extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              //todo: reset dictionary
-              Navigator.pop(context);
+            onPressed: () async {
+              await ExportImportService.resetDictionary();
+              await SegmentingService.instance.initDictionary();
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
             },
             child: const Text(
               "Yes",
@@ -74,8 +100,11 @@ class Settings extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              //todo: export dictionary
+            onPressed: () async {
+              await ExportImportService.exportDictionary();
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
             },
             child: const Text(
               "Yes",
@@ -90,65 +119,7 @@ class Settings extends StatelessWidget {
   void importDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => Popup(
-        title: "Export",
-        content: Column(
-          children: [
-            const Text(
-              "Select the file (.txt)",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
-            ),
-
-            const SizedBox(height: 20),
-
-            OutlinedButton.icon(
-              onPressed: () {
-                //todo: pick file
-              },
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Colors.black,
-                padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
-              ),
-
-              label: const Text(
-                "Select file",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              icon: const Icon(
-                Symbols.files_rounded,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF666666)),
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              "Cancel",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              //todo import filet);
-            },
-            child: const Text(
-              "Confirm",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
+      builder: (_) => ImportDictionaryDialog(refreshData: refreshData),
     );
   }
 
@@ -180,7 +151,8 @@ class Settings extends StatelessWidget {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Dictionary(list: list),
+                        builder: (context) =>
+                            Dictionary(list: list, refreshData: refreshData),
                       ),
                     ),
                     leading: const Icon(
@@ -305,6 +277,98 @@ class Settings extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ImportDictionaryDialog extends StatefulWidget {
+  const ImportDictionaryDialog({super.key, required this.refreshData});
+
+  final VoidCallback refreshData;
+
+  @override
+  State<ImportDictionaryDialog> createState() => _ImportDictionaryDialogState();
+}
+
+class _ImportDictionaryDialogState extends State<ImportDictionaryDialog> {
+  FilePickerResult? result;
+  @override
+  Widget build(BuildContext context) {
+    return Popup(
+      title: "Export",
+      content: Column(
+        children: [
+          const Text(
+            "Select the file (.txt)",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+
+          const SizedBox(height: 20),
+
+          OutlinedButton.icon(
+            onPressed: () async {
+              FilePickerResult? temp = await FilePicker.platform.pickFiles(
+                type: FileType.custom,
+                allowedExtensions: ['txt'],
+              );
+
+              if (temp == null) return;
+
+              setState(() {
+                result = temp;
+              });
+            },
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Colors.black,
+              padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+            ),
+
+            label: Text(
+              result != null ? result!.files.single.name : "Select file",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            icon: const Icon(
+              Symbols.files_rounded,
+              color: Colors.white,
+              size: 30,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF666666)),
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            "Cancel",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: result != null
+              ? () async {
+                  await ExportImportService.importDictionary(result!);
+                  await SegmentingService.instance.initDictionary();
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+
+                  widget.refreshData();
+                }
+              : null,
+          child: const Text(
+            "Confirm",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -3,24 +3,44 @@ import 'package:khmer_text_vectorization/data/app_database.dart';
 import 'package:khmer_text_vectorization/model/segment.dart';
 
 class SegmentingService {
-  final Set<Characters> dictionary = {};
+  final Map<Characters, int> dictionary = {};
+  final Set<int> usedWords = {};
   static final SegmentingService instance = SegmentingService._constructor();
   SegmentingService._constructor();
 
+  Future<void> editWord(Characters newWord, Characters oldWord) async {
+    int? oldWordId = dictionary[oldWord];
+    if (oldWordId != null) {
+      dictionary.remove(oldWord);
+      dictionary[newWord] = oldWordId;
+      await AppDatabase.instance.updateWord(MapEntry(newWord, oldWordId));
+    }
+  }
+
+  Future<void> deleteWord(Characters word) async {
+    int? wordId = dictionary[word];
+    if (wordId != null) {
+      dictionary.remove(word);
+      await AppDatabase.instance.deleteWord(wordId);
+    }
+  }
+
   Future<void> _getAllWords() async {
     final db = AppDatabase.instance;
-
-    List<String> list = await db.getAllWords();
-    dictionary.addAll(list.map((wordString) => Characters(wordString)).toSet());
+    dictionary.clear();
+    dictionary.addAll(await db.getAllWords());
+    usedWords.clear();
+    usedWords.addAll(await db.getUsedWord());
   }
 
   Future<void> initDictionary() async {
     await _getAllWords();
   }
 
-  void addNewWord(Characters newWord) {
-    dictionary.add(newWord);
-    AppDatabase.instance.saveNewWord(newWord.string);
+  Future<int> addNewWord(Characters newWord) async {
+    int id = await AppDatabase.instance.saveNewWord(newWord.string);
+    dictionary[newWord] = id;
+    return id;
   }
 
   Future<List<Segment>> segmentRawText(String rawText) async {
@@ -34,7 +54,7 @@ class SegmentingService {
   }
 
   List<Segment> _bbm({
-    required Set<Characters> dictionary,
+    required Map<Characters, int> dictionary,
     required Characters rawText,
     required int lMax,
   }) {
@@ -60,9 +80,9 @@ class SegmentingService {
         Characters lookUpRange = rawText.getRange(startPoint, pointer);
 
         // Check the dictionary
-        if (dictionary.contains(lookUpRange)) {
+        if (dictionary.keys.contains(lookUpRange)) {
           // MATCH FOUND
-          result.add(Segment(lookUpRange, true));
+          result.add(Segment(dictionary[lookUpRange], lookUpRange, true));
 
           // Move the pointer to the start of the matched word
           pointer = startPoint;
@@ -79,10 +99,10 @@ class SegmentingService {
         final prevResult = result.isNotEmpty ? result.last : null;
         Segment newResult;
         if (prevResult != null && prevResult.isKnown == false) {
-          newResult = Segment(unknownToken + prevResult.text, false);
+          newResult = Segment(null, unknownToken + prevResult.text, false);
           result.removeLast();
         } else {
-          newResult = Segment(unknownToken, false);
+          newResult = Segment(null, unknownToken, false);
         }
 
         result.add(newResult);

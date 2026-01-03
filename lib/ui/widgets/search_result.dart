@@ -15,14 +15,14 @@ class Searchresult extends StatelessWidget {
     required this.onSelected,
   });
 
-  final List<Characters> dictionaryTexts;
+  final Map<Characters, int> dictionaryTexts;
   final List<Sample> allSamples;
   final String searchQuery;
   final String topicSort;
 
   final Set<int>? selectedIndex;
-  final Function(int)? onView;
-  final Function(int)? onSelected;
+  final Function(Sample)? onView;
+  final Function(Sample)? onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +42,16 @@ class Searchresult extends StatelessWidget {
           .toList();
     }
 
-    List<Characters> filterDictionary = dictionaryTexts
-        .where(
-          (item) =>
-              item.toString().toLowerCase().contains(searchQuery.toLowerCase()),
-        )
-        .toList();
+    Map<Characters, int> filterDictionary = Map.fromEntries(
+      dictionaryTexts.entries.where(
+        (item) => item.key.toLowerCase().contains(searchQuery.toLowerCase()),
+      ),
+    );
 
     final bool showDictionary = dictionaryTexts.isNotEmpty;
     final listToShow = showDictionary ? filterDictionary : filterSamples;
-    if (listToShow.isEmpty) {
+    if ((listToShow is List && listToShow.isEmpty) ||
+        listToShow is Map && listToShow.isEmpty) {
       return Expanded(
         child: Center(
           child: const Text(
@@ -72,10 +72,14 @@ class Searchresult extends StatelessWidget {
       );
     }
 
+    List<MapEntry<Characters, int>> dictionaryMapEntries = filterDictionary
+        .entries
+        .toList();
+
     Widget content = showDictionary
         ? Expanded(
             child: ListView.builder(
-              itemCount: filterDictionary.length,
+              itemCount: dictionaryMapEntries.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -91,7 +95,7 @@ class Searchresult extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        filterDictionary[index].toString(),
+                        dictionaryMapEntries[index].key.string,
                         style: GoogleFonts.kantumruyPro(
                           color: Colors.black,
                           fontSize: 16,
@@ -109,19 +113,24 @@ class Searchresult extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               itemCount: filterSamples.length,
               itemBuilder: (context, index) {
+                final currentSample = filterSamples[index];
                 return VectorizedTextBox(
-                  vecTitle: filterSamples[index].name,
-                  vecDescription: filterSamples[index].description,
-                  vecDate: filterSamples[index].createdAt,
-                  vecLabel: filterSamples[index].stanceLabel,
-                  vecQuality: filterSamples[index].quality,
-                  isSelected: selectedIndex!.contains(index),
+                  vecTitle: currentSample.name,
+                  vecDescription: currentSample.description,
+                  vecDate: currentSample.createdAt,
+                  vecLabel: currentSample.stanceLabel,
+                  vecQuality: currentSample.quality,
+                  isSelected: selectedIndex!.contains(currentSample.id),
                   isSelectionMode: selectedIndex!.isNotEmpty,
-                  onSelected: selectedIndex!.isNotEmpty
-                      ? () => onView!(index)
-                      : () => onSelected!(index),
+                  onSelected: () => onSelected!(currentSample),
 
-                  onView: () => onView!(index),
+                  onView: () {
+                    if (selectedIndex!.isNotEmpty) {
+                      onSelected!(currentSample);
+                    } else {
+                      onView!(currentSample);
+                    }
+                  },
                 );
               },
               separatorBuilder: (context, index) =>

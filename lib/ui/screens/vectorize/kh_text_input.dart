@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/ui/widgets/custom_dialog.dart';
 
 class KHTextInput extends StatefulWidget {
-  const KHTextInput({super.key, required this.onNext});
+  const KHTextInput({super.key, required this.onNext, required this.initValue});
 
   final ValueChanged<String> onNext;
+  final String initValue;
 
   @override
   State<KHTextInput> createState() => _KHTextInputState();
@@ -12,6 +13,12 @@ class KHTextInput extends StatefulWidget {
 
 class _KHTextInputState extends State<KHTextInput> {
   final TextEditingController textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    textController.text = widget.initValue;
+  }
 
   @override
   void dispose() {

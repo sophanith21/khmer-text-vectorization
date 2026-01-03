@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:khmer_text_vectorization/model/segment.dart';
 import 'package:khmer_text_vectorization/model/services/segmenting_service.dart';
 import 'package:khmer_text_vectorization/ui/widgets/custom_dialog.dart';
+import 'package:khmer_text_vectorization/ui/widgets/segmented_box.dart';
 
 class Segmentation extends StatefulWidget {
   const Segmentation({
@@ -42,10 +42,14 @@ class _SegmentationState extends State<Segmentation> {
   }
 
   // For false alarm
-  void rectifyWord(int index) {
+  void rectifyWord(int index) async {
+    int id = await updateDictionary(segmentedTextState[index].text);
     setState(() {
-      segmentedTextState[index] = Segment(segmentedTextState[index].text, true);
-      updateDictionary(segmentedTextState[index].text);
+      segmentedTextState[index] = Segment(
+        id,
+        segmentedTextState[index].text,
+        true,
+      );
     });
     widget.updateSegmentedText(segmentedTextState);
   }
@@ -56,16 +60,19 @@ class _SegmentationState extends State<Segmentation> {
     });
   }
 
-  void splitWord(List<Characters> newWords, int index) {
+  void splitWord(List<Characters> newWords, int index) async {
+    List<int> ids = [];
+    for (int i = 0; i < newWords.length; i++) {
+      ids.add(await updateDictionary(newWords[i]));
+    }
+
     if (newWords.isNotEmpty) {
       List<Segment> newWordsEntry = [];
       setState(() {
-        segmentedTextState[index] = Segment(newWords[0], true);
-        updateDictionary(newWords[0]);
+        segmentedTextState[index] = Segment(ids[0], newWords[0], true);
 
         for (int i = 1; i < newWords.length; i++) {
-          newWordsEntry.add(Segment(newWords[i], true));
-          updateDictionary(newWords[i]);
+          newWordsEntry.add(Segment(ids[i], newWords[i], true));
         }
         segmentedTextState.insertAll(index + 1, newWordsEntry);
       });
@@ -73,13 +80,12 @@ class _SegmentationState extends State<Segmentation> {
     }
   }
 
-  // TO BE ADD: Add the word to the dictionary
   void mergeWord(int currentIndex, int indexToMerge) {
     if (segmentedTextState.length >= 2) {
       setState(() {
         var currentWord = segmentedTextState[currentIndex];
         var wordToMerge = segmentedTextState[indexToMerge];
-        currentWord = Segment(currentWord.text + wordToMerge.text, false);
+        currentWord = Segment(null, currentWord.text + wordToMerge.text, false);
         segmentedTextState[currentIndex] = currentWord;
         segmentedTextState.removeAt(indexToMerge);
       });
@@ -96,8 +102,8 @@ class _SegmentationState extends State<Segmentation> {
     return true;
   }
 
-  void updateDictionary(Characters newWord) {
-    SegmentingService.instance.addNewWord(newWord);
+  Future<int> updateDictionary(Characters newWord) async {
+    return await SegmentingService.instance.addNewWord(newWord);
   }
 
   @override
@@ -365,6 +371,12 @@ class _ManualSegmentDialogState extends State<ManualSegmentDialog> {
     textFieldController.text = widget.label;
   }
 
+  @override
+  void dispose() {
+    textFieldController.dispose();
+    super.dispose();
+  }
+
   void onTextFieldChange(String value) {
     if (value.isNotEmpty) {
       Characters word = Characters(value);
@@ -569,39 +581,6 @@ class FalseAlarmDialog extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-class SegmentedBox extends StatelessWidget {
-  const SegmentedBox({super.key, required this.boxColor, required this.label});
-
-  final Color boxColor;
-  final String label;
-
-  String get text {
-    if (label.length > 20) {
-      return "${label.substring(0, 20)}...";
-    }
-    return label;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: boxColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-      child: Text(
-        text,
-        style: GoogleFonts.kantumruyPro(
-          decoration: TextDecoration.none,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
     );
   }
 }

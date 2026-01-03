@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:khmer_text_vectorization/data/app_database.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
 import 'package:khmer_text_vectorization/model/segment.dart';
 import 'package:khmer_text_vectorization/model/services/quality_assess_service.dart';
+import 'package:khmer_text_vectorization/model/services/sample_persistence_service.dart';
 import 'package:khmer_text_vectorization/model/services/segmenting_service.dart';
 import 'package:khmer_text_vectorization/model/topic_tag.dart';
 import 'package:khmer_text_vectorization/ui/screens/vectorize/almost_there.dart';
@@ -14,8 +14,21 @@ import 'package:khmer_text_vectorization/ui/screens/vectorize/segmentation.dart'
 import 'package:khmer_text_vectorization/ui/widgets/navigation.dart';
 
 class VectorizeScreen extends StatefulWidget {
-  const VectorizeScreen({super.key, required this.switchTab});
-  final ValueChanged<ScreenType> switchTab;
+  const VectorizeScreen({
+    super.key,
+    this.switchTab,
+    this.editSample,
+    this.editSegmentedText,
+  });
+  const VectorizeScreen.edit({
+    super.key,
+    required this.editSample,
+    required this.editSegmentedText,
+    this.switchTab,
+  });
+  final ValueChanged<ScreenType>? switchTab;
+  final Sample? editSample;
+  final List<Segment>? editSegmentedText;
 
   @override
   State<VectorizeScreen> createState() => _VectorizeScreenState();
@@ -34,25 +47,36 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
-  Future<void> onVectorize(BuildContext context) async {
-    final startTime = DateTime.now();
-    int? stanceLabeInt = stanceLabel == null
-        ? null
-        : stanceLabel!
-        ? 1
-        : 0;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.editSample != null && widget.editSegmentedText != null) {
+      currentRawText = widget.editSample!.originalInput;
+      segmentedText = [...widget.editSegmentedText!];
+      stanceLabel = widget.editSample!.stanceLabel;
+      topicTags = {...(widget.editSample!.topicTags ?? []).toSet()};
+      score = widget.editSample!.quality;
+      nameController.text = widget.editSample!.name;
+      descriptionController.text = widget.editSample!.description;
+    }
+  }
 
-    Sample newSample = Sample(
+  Future<void> onVectorize(
+    BuildContext dialogContext,
+    BuildContext parentContext,
+  ) async {
+    final startTime = DateTime.now();
+
+    Sample savedSample = await SamplePersistenceService.instance.saveSample(
+      editSample: widget.editSample,
       name: nameController.text,
       description: descriptionController.text,
-      originalInput: currentRawText,
+      rawText: currentRawText,
+      stanceLabel: stanceLabel,
       quality: score,
-      stanceLabel: stanceLabeInt,
-      topicTags: topicTags.toList(),
+      topicTags: topicTags,
+      segmentedText: segmentedText,
     );
-
-    List<Characters> segments = segmentedText.map((e) => e.text).toList();
-    await AppDatabase.instance.saveFullContribution(newSample, segments);
 
     final elapsed = DateTime.now().difference(startTime);
     const minimumwait = Duration(milliseconds: 1500);
@@ -61,11 +85,19 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
       await Future.delayed(minimumwait - elapsed);
     }
 
-    if (context.mounted) {
-      Navigator.pop(context);
-      widget.switchTab(ScreenType.collection);
+    if (dialogContext.mounted) {
+      Navigator.pop(dialogContext);
+      if (widget.switchTab != null) {
+        widget.switchTab!(ScreenType.collection);
+      }
     }
-    resetStepper();
+    if (widget.switchTab != null) {
+      resetStepper();
+    } else {
+      if (parentContext.mounted) {
+        Navigator.pop(parentContext, savedSample);
+      }
+    }
   }
 
   void resetStepper() {
@@ -179,7 +211,7 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
               key: key,
               index: currentStep,
               children: [
-                KHTextInput(onNext: onTextInputNext),
+                KHTextInput(onNext: onTextInputNext, initValue: currentRawText),
                 Segmentation(
                   segmentedText: segmentedText,
                   onBack: onBack,
@@ -191,12 +223,15 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
                   onNext: onDataLabellingNext,
                   updateStance: updateStance,
                   updateTags: updateTopicTags,
+                  initStance: stanceLabel,
+                  initTopicTags: topicTags,
                 ),
                 AlmostThere(
                   quality: score,
                   nameController: nameController,
                   descriptionController: descriptionController,
                   onBack: onBack,
+                  parentContext: context,
                   onVectorize: onVectorize,
                 ),
               ],
@@ -211,47 +246,55 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
     bool isCompleted = currentStep > index;
     bool isActive = currentStep == index;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isCompleted ? Colors.green : Colors.white,
-            border: Border.all(
-              color: (isCompleted || isActive)
-                  ? Colors.green
-                  : Colors.grey.shade300,
-              width: 1,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => setState(() {
+        if (widget.editSample != null) {
+          currentStep = index;
+        }
+      }),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isCompleted ? Colors.green : Colors.white,
+              border: Border.all(
+                color: (isCompleted || isActive)
+                    ? Colors.green
+                    : Colors.grey.shade300,
+                width: 1,
+              ),
+            ),
+            child: isCompleted
+                ? const Icon(Icons.check, size: 18, color: Colors.white)
+                : isActive
+                ? Center(
+                    child: Container(
+                      width: 5,
+                      height: 5,
+                      decoration: const BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-          child: isCompleted
-              ? const Icon(Icons.check, size: 18, color: Colors.white)
-              : isActive
-              ? Center(
-                  child: Container(
-                    width: 5,
-                    height: 5,
-                    decoration: const BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                )
-              : null,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

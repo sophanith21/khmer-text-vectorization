@@ -7,7 +7,7 @@ class TopicTag {
   Map<String, dynamic> toMap() => {'tag': tagName};
 
   factory TopicTag.fromMap(Map<String, dynamic> map) =>
-      TopicTag(id: map['id'], tagName: map['tag']);
+      TopicTag(id: map['id'] as int, tagName: map['tag'] as String);
 
   @override
   bool operator ==(Object other) {
