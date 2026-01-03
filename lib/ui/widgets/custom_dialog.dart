@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CustomDialog extends StatelessWidget {
-  const CustomDialog({super.key, required this.title, required this.contents});
+  const CustomDialog({
+    super.key,
+    required this.title,
+    required this.contents,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+  });
 
   final String title;
   final List<Widget> contents;
+  final CrossAxisAlignment crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +36,7 @@ class CustomDialog extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
             Container(
               decoration: BoxDecoration(

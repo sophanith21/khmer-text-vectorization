@@ -10,12 +10,14 @@ class AlmostThere extends StatelessWidget {
     required this.onBack,
     required this.onVectorize,
     required this.quality,
+    required this.parentContext,
   });
 
   final TextEditingController nameController;
   final TextEditingController descriptionController;
   final VoidCallback onBack;
-  final Future<void> Function(BuildContext) onVectorize;
+  final BuildContext parentContext;
+  final Future<void> Function(BuildContext, BuildContext) onVectorize;
   final double quality;
 
   Color get qualityColor {
@@ -44,7 +46,7 @@ class AlmostThere extends StatelessWidget {
                 isVectorizing = value;
               });
               if (isVectorizing) {
-                await onVectorize(context);
+                await onVectorize(context, parentContext);
               }
             }
 

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
+import 'package:khmer_text_vectorization/model/services/export_import_service.dart';
+import 'package:khmer_text_vectorization/model/services/sample_persistence_service.dart';
+import 'package:khmer_text_vectorization/model/services/segmenting_service.dart';
 import 'package:khmer_text_vectorization/model/topic_tag.dart';
+import 'package:khmer_text_vectorization/ui/Screens/view_sample_screen.dart';
+import 'package:khmer_text_vectorization/ui/widgets/custom_dialog.dart';
 import 'package:khmer_text_vectorization/ui/widgets/pop_up.dart';
 import 'package:khmer_text_vectorization/ui/widgets/search.dart';
 import 'package:khmer_text_vectorization/ui/widgets/search_result.dart';
@@ -24,10 +29,12 @@ class Collection extends StatefulWidget {
     super.key,
     required this.allSamples,
     required this.onVectoriezedScreen,
+    required this.refreshData,
   });
 
   final List<Sample> allSamples;
   final VoidCallback onVectoriezedScreen;
+  final VoidCallback refreshData;
 
   @override
   State<Collection> createState() => _CollectionState();
@@ -88,34 +95,83 @@ class _CollectionState extends State<Collection> {
     });
   }
 
-  final Set<int> seletedIndex = {};
-  bool get isSelectionMode => seletedIndex.isNotEmpty;
+  final Set<int> selectedIds = {};
+  bool get isSelectionMode => selectedIds.isNotEmpty;
 
-  void onView(int index) {
+  void onView(Sample selectedSample) {
     if (isSelectionMode) {
-      onSelected(index);
+      onSelected(selectedSample);
       print("onview selected");
     } else {
-      //todo: go to view detail screen
-      print("pressed view detail");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return ViewSampleScreen(selectedSample: selectedSample);
+          },
+        ),
+      );
     }
   }
 
-  void onSelected(int index) {
+  void onSelected(Sample selectedSample) {
     setState(() {
-      // print("long pressed");
-      if (seletedIndex.contains(index)) {
-        seletedIndex.remove(index);
+      if (selectedIds.contains(selectedSample.id)) {
+        selectedIds.remove(selectedSample.id);
         print("removed");
         print(isSelectionMode);
-        print(seletedIndex);
+        print(selectedIds);
       } else {
-        seletedIndex.add(index);
-        print("added");
-        print(isSelectionMode);
-        print(seletedIndex);
+        if (selectedSample.id != null) {
+          selectedIds.add(selectedSample.id!);
+          print("added");
+          print(isSelectionMode);
+          print(selectedIds);
+        }
       }
     });
+  }
+
+  void onDeleteDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          title: "Delete sample(s)",
+          crossAxisAlignment: CrossAxisAlignment.center,
+          contents: [
+            SizedBox(height: 20),
+            Text(
+              "Deleting the sample is irreversible.",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 156, 28, 19),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text("Number of Items: ${selectedIds.length}"),
+            SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 75, 7, 2),
+                fixedSize: Size(113, 35),
+                padding: EdgeInsets.symmetric(vertical: 10),
+              ),
+              onPressed: () async {
+                await SamplePersistenceService.instance.deleteSamples(
+                  selectedIds.toList(),
+                );
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+                widget.refreshData();
+              },
+              child: const Text("Proceed"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void onExportDialog(BuildContext context) {
@@ -134,7 +190,7 @@ class _CollectionState extends State<Collection> {
             const SizedBox(height: 20),
 
             Text(
-              "${seletedIndex.length} item(s)",
+              "${selectedIds.length} item(s)",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
             ),
 
@@ -151,8 +207,16 @@ class _CollectionState extends State<Collection> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              //todo export items
+            onPressed: () async {
+              await ExportImportService.exportFullDataset(
+                samples,
+                (SegmentingService.instance.dictionary.map(
+                  (key, value) => MapEntry(value, key),
+                )),
+              );
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
             },
             child: const Text(
               "Yes",
@@ -198,13 +262,37 @@ class _CollectionState extends State<Collection> {
 
       case SortType.labelGoodToBad:
         sorted.sort(
-          (a, b) => (b.stanceLabel ?? -1).compareTo(a.stanceLabel ?? -1),
+          (a, b) =>
+              (b.stanceLabel != null
+                      ? b.stanceLabel!
+                            ? 1
+                            : 0
+                      : -1)
+                  .compareTo(
+                    a.stanceLabel != null
+                        ? b.stanceLabel!
+                              ? 1
+                              : 0
+                        : -1,
+                  ),
         );
         break;
 
       case SortType.labelBadToGood:
         sorted.sort(
-          (a, b) => (a.stanceLabel ?? -1).compareTo((b.stanceLabel ?? -1)),
+          (a, b) =>
+              (a.stanceLabel != null
+                      ? b.stanceLabel!
+                            ? 1
+                            : 0
+                      : -1)
+                  .compareTo(
+                    b.stanceLabel != null
+                        ? b.stanceLabel!
+                              ? 1
+                              : 0
+                        : -1,
+                  ),
         );
         break;
     }
@@ -316,7 +404,7 @@ class _CollectionState extends State<Collection> {
                             IconButton(
                               onPressed: () {
                                 setState(() {
-                                  seletedIndex.clear();
+                                  selectedIds.clear();
                                 });
                               },
                               icon: const Icon(Icons.cancel_outlined),
@@ -329,15 +417,27 @@ class _CollectionState extends State<Collection> {
                                 border: Border.all(),
                               ),
                               child: Text(
-                                "Select items ${seletedIndex.length} ",
+                                "Select items ${selectedIds.length} ",
                               ),
                             ),
                           ],
                         ),
 
-                        ElevatedButton(
-                          onPressed: () => onExportDialog(context),
-                          child: const Text("Export"),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () => onExportDialog(context),
+                              icon: Icon(Icons.share),
+                            ),
+                            const SizedBox(width: 10),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete_sweep_rounded,
+                                color: Colors.black,
+                              ),
+                              onPressed: () => onDeleteDialog(context),
+                            ),
+                          ],
                         ),
                       ],
                     )
@@ -372,11 +472,11 @@ class _CollectionState extends State<Collection> {
             Container(height: 2, width: 370, color: Colors.black),
 
             Searchresult(
-              dictionaryTexts: [],
+              dictionaryTexts: {},
               searchQuery: query,
               allSamples: sortedSamples,
               topicSort: topicState,
-              selectedIndex: seletedIndex,
+              selectedIndex: selectedIds,
               onSelected: onSelected,
               onView: onView,
             ),

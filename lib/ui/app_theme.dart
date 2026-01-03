@@ -12,7 +12,8 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
 
-      // textTheme: GoogleFonts.kantumruyProTextTheme(),
+      dialogTheme: DialogThemeData(barrierColor: Colors.black.withAlpha(51)),
+
       colorScheme: const ColorScheme(
         brightness: Brightness.light,
         primary: primaryBlack,
