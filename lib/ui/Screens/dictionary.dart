@@ -77,7 +77,14 @@ class _DictionaryState extends State<Dictionary> {
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 9),
                   margin: EdgeInsets.all(5),
-                  child: Text(filteredList[index].key.string),
+                  child: Text(
+                    filteredList[index].key.string,
+                    style: TextStyle(
+                      fontFamily: "KantumruyPro",
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               );
             },

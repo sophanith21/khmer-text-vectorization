@@ -13,7 +13,7 @@ class Filterdate extends StatelessWidget {
 
   final List<Sample> allSamples;
   final DateTime dateGroup;
-  final VoidCallback onView;
+  final Function(Sample) onView;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,9 @@ class Filterdate extends StatelessWidget {
             vecLabel: filterSamples[index].stanceLabel,
             vecQuality: filterSamples[index].quality,
             onSelected: null,
-            onView: onView,
+            onView: () {
+              onView(filterSamples[index]);
+            },
           );
         },
         separatorBuilder: (context, index) =>

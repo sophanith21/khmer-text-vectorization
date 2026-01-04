@@ -244,7 +244,7 @@ class AppDatabase {
     final db = await database;
 
     return await db.transaction((txn) async {
-      return await db.insert(
+      return await txn.insert(
         _topicTagsTable,
         newTag.toMap(),
         conflictAlgorithm: ConflictAlgorithm.ignore,
@@ -448,6 +448,10 @@ class AppDatabase {
       totalWords += (row['word_count'] as int);
     }
 
+    if (totalWords == 0) {
+      return {};
+    }
+
     Map<int, TfIdf> vector = {};
     for (var row in rows) {
       double tf = (row['word_count'] as int) / totalWords;
@@ -521,7 +525,8 @@ class AppDatabase {
        * IDF Formula: log(Total Documents / Documents containing Term)
        * This measures how important a term is within the entire corpus.
        */
-      final double idfScore = log(totalDocuments / documentFrequency);
+      final double idfScore =
+          log((1 + totalDocuments) / (1 + documentFrequency)) + 1;
 
       batch.update(
         _dictionaryTable,

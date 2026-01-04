@@ -58,6 +58,9 @@ class Settings extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
               await ExportImportService.resetDictionary();
               await SegmentingService.instance.initDictionary();
               if (context.mounted) {
@@ -101,10 +104,9 @@ class Settings extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
+              Navigator.pop(context);
+
               await ExportImportService.exportDictionary();
-              if (context.mounted) {
-                Navigator.pop(context);
-              }
             },
             child: const Text(
               "Yes",
@@ -295,7 +297,7 @@ class _ImportDictionaryDialogState extends State<ImportDictionaryDialog> {
   @override
   Widget build(BuildContext context) {
     return Popup(
-      title: "Export",
+      title: "Import",
       content: Column(
         children: [
           const Text(

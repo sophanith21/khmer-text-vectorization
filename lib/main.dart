@@ -42,7 +42,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<Map<Characters, int>> get dictionary async {
-    await SegmentingService.instance.initDictionary();
+    if (SegmentingService.instance.dictionary.isEmpty) {
+      await SegmentingService.instance.initDictionary();
+    }
+
     return SegmentingService.instance.dictionary;
   }
 

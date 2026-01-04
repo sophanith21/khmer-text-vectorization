@@ -158,12 +158,12 @@ class _CollectionState extends State<Collection> {
                 padding: EdgeInsets.symmetric(vertical: 10),
               ),
               onPressed: () async {
+                Navigator.pop(context);
+
                 await SamplePersistenceService.instance.deleteSamples(
                   selectedIds.toList(),
                 );
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
+
                 widget.refreshData();
               },
               child: const Text("Proceed"),
@@ -208,15 +208,14 @@ class _CollectionState extends State<Collection> {
           ),
           ElevatedButton(
             onPressed: () async {
+              Navigator.pop(context);
+
               await ExportImportService.exportFullDataset(
                 samples,
                 (SegmentingService.instance.dictionary.map(
                   (key, value) => MapEntry(value, key),
                 )),
               );
-              if (context.mounted) {
-                Navigator.pop(context);
-              }
             },
             child: const Text(
               "Yes",

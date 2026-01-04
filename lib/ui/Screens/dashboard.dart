@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
+import 'package:khmer_text_vectorization/ui/Screens/view_sample_screen.dart';
 import 'package:khmer_text_vectorization/ui/widgets/filterDate.dart';
 import 'package:khmer_text_vectorization/ui/widgets/circle_graph.dart';
 
@@ -49,8 +50,15 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void onView() {
-    //Todo: to view details
+  void onView(Sample selectedSample) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return ViewSampleScreen(selectedSample: selectedSample);
+        },
+      ),
+    );
   }
 
   @override
