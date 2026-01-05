@@ -15,10 +15,14 @@ class LoadingDialog extends StatelessWidget {
     return CustomDialog(
       title: title,
       contents: [
-        SizedBox(height: 20),
-        SizedBox(width: 75, height: 75, child: CircularProgressIndicator()),
-        SizedBox(height: 25),
-        Text(description, style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 20),
+        const SizedBox(
+          width: 75,
+          height: 75,
+          child: CircularProgressIndicator(),
+        ),
+        const SizedBox(height: 25),
+        Text(description, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
     );
   }

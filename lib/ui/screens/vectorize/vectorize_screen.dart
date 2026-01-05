@@ -200,7 +200,7 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+            margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
             color: Colors.black,
             width: double.infinity,
             height: 2,
@@ -288,7 +288,7 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
           const SizedBox(height: 8),
           Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
               color: Colors.black,

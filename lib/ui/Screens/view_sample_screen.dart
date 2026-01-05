@@ -53,7 +53,7 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
 
             return !isProceed
                 ? RefactorIDFDialog(onProceedTap: onProceedTap)
-                : LoadingDialog(
+                : const LoadingDialog(
                     title: "Refactoring",
                     description: "Please wait until the operation is done.",
                   );
@@ -77,7 +77,7 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
           contents: [
             Expanded(
               child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 children: [
                   Text(
                     selectedSample.name,
@@ -111,7 +111,7 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                       border: Border.all(color: Colors.white, width: 1),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black,
                           blurRadius: 4,
                           blurStyle: BlurStyle.outer,
@@ -159,7 +159,7 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                       border: Border.all(color: Colors.white, width: 1),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black,
                           blurRadius: 4,
                           blurStyle: BlurStyle.outer,
@@ -171,7 +171,7 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                     child: SingleChildScrollView(
                       child: Text(
                         selectedSample.originalInput,
-                        style: TextStyle(fontFamily: "KantumruyPro"),
+                        style: const TextStyle(fontFamily: "KantumruyPro"),
                       ),
                     ),
                   ),
@@ -187,13 +187,13 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                   Text("Total Words: ${segmentedText.length}"),
                   const SizedBox(height: 11),
                   Container(
-                    constraints: BoxConstraints(maxHeight: 173),
+                    constraints: const BoxConstraints(maxHeight: 173),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.white, width: 1),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black,
                           blurRadius: 4,
                           blurStyle: BlurStyle.outer,
@@ -293,13 +293,13 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                             (e) => TableRow(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Center(
                                     child: Text(
                                       (segmentedText.firstWhere(
                                         (eT) => eT.id == e.key,
                                       )).text.string,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: "KantumruyPro",
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
@@ -308,11 +308,11 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Center(
                                     child: Text(
                                       e.value.tf.toStringAsFixed(2),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
                                       ),
@@ -320,11 +320,11 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Center(
                                     child: Text(
                                       e.value.idf.toStringAsFixed(2),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
                                       ),
@@ -332,11 +332,11 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Center(
                                     child: Text(
                                       e.value.score.toStringAsFixed(2),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
                                       ),
@@ -361,8 +361,8 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      fixedSize: Size(130, 35),
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      fixedSize: const Size(130, 35),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     onPressed: () async {
                       Sample updatedSample =
@@ -391,7 +391,7 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                         selectedSample = updatedSample;
                       });
                     },
-                    child: Text(
+                    child: const Text(
                       "Edit",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
@@ -400,11 +400,11 @@ class _ViewSampleScreenState extends State<ViewSampleScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       fixedSize: Size(130, 35),
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
 
                     onPressed: needsRefactor ? onRefactorButtonPress : null,
-                    child: Text(
+                    child: const Text(
                       "Refactor the IDF",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
@@ -438,7 +438,10 @@ class RefactorIDFDialog extends StatelessWidget {
               TextSpan(
                 text:
                     "\nDictionary Word Count: ${SegmentingService.instance.dictionary.length}",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ],
           ),
@@ -448,10 +451,10 @@ class RefactorIDFDialog extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
             fixedSize: Size(130, 35),
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
           ),
           onPressed: onProceedTap,
-          child: Text("Proceed"),
+          child: const Text("Proceed"),
         ),
       ],
     );

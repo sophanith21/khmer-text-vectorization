@@ -15,7 +15,7 @@ class CustomDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
+      insetPadding: const EdgeInsets.fromLTRB(10, 15, 20, 15),
       backgroundColor: Colors.transparent,
       child: Container(
         width: double.infinity,
@@ -25,15 +25,15 @@ class CustomDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 1),
           boxShadow: [
-            BoxShadow(
+            const BoxShadow(
               color: Colors.black,
               offset: Offset(8, 9),
               spreadRadius: 2,
             ),
-            BoxShadow(color: Color(0xFF666666), offset: Offset(8, 8)),
+            const BoxShadow(color: Color(0xFF666666), offset: Offset(8, 8)),
           ],
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: crossAxisAlignment,
@@ -50,7 +50,10 @@ class CustomDialog extends StatelessWidget {
                 child: Center(
                   child: Text(
                     title,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

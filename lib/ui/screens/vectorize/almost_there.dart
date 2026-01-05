@@ -83,26 +83,26 @@ class AlmostThere extends StatelessWidget {
             "Please add a name and a description, so you can find it later.",
             style: TextStyle(fontSize: 16),
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
 
           // --- Input Field ---
           const Text(
             "Name",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          SizedBox(height: 13),
+          const SizedBox(height: 13),
           TextField(
             controller: nameController,
             textAlignVertical: TextAlignVertical(y: -1),
             maxLength: 100,
             keyboardType: TextInputType.multiline,
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           const Text(
             "Description",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          SizedBox(height: 13),
+          const SizedBox(height: 13),
           TextField(
             controller: descriptionController,
             textAlignVertical: TextAlignVertical(y: -1),
@@ -110,8 +110,8 @@ class AlmostThere extends StatelessWidget {
             maxLength: 255,
             keyboardType: TextInputType.multiline,
           ),
-          Spacer(),
-          SizedBox(height: 26),
+          const Spacer(),
+          const SizedBox(height: 26),
 
           // --- Stepper Navigation Buttons ---
           Row(
@@ -119,10 +119,10 @@ class AlmostThere extends StatelessWidget {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF666666),
+                  backgroundColor: const Color(0xFF666666),
                 ),
                 onPressed: onBack,
-                child: Text(
+                child: const Text(
                   "Back",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -138,16 +138,16 @@ class AlmostThere extends StatelessWidget {
                         return CustomDialog(
                           title: "ERROR",
                           contents: [
-                            SizedBox(height: 20),
-                            Text("Please make sure to fill the name."),
-                            Text("Description is optional."),
+                            const SizedBox(height: 20),
+                            const Text("Please make sure to fill the name."),
+                            const Text("Description is optional."),
                           ],
                         );
                       },
                     );
                   }
                 },
-                child: Text(
+                child: const Text(
                   "Start Vectorizing",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -178,7 +178,7 @@ class QualityCheckDialog extends StatelessWidget {
       title: "Quality Check",
       contents: [
         const SizedBox(height: 20),
-        Text("Based on our system, your data quality is around: "),
+        const Text("Based on our system, your data quality is around: "),
         const SizedBox(height: 20),
         Stack(
           alignment: AlignmentGeometry.center,
@@ -189,19 +189,19 @@ class QualityCheckDialog extends StatelessWidget {
               child: CircularProgressIndicator(
                 value: quality / 100,
                 strokeWidth: 12,
-                backgroundColor: Color(0xFF1F1B2E),
+                backgroundColor: const Color(0xFF1F1B2E),
                 valueColor: AlwaysStoppedAnimation<Color>(qualityColor),
                 strokeCap: StrokeCap.round,
               ),
             ),
             Text(
               "${quality.toInt().toString()}%",
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
           ],
         ),
         const SizedBox(height: 25),
-        Text(
+        const Text(
           "Do you want to proceed?",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -210,10 +210,10 @@ class QualityCheckDialog extends StatelessWidget {
           onPressed: () => setIsVectorizing(true),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
-            fixedSize: Size(113, 35),
-            padding: EdgeInsets.symmetric(vertical: 10),
+            fixedSize: const Size(113, 35),
+            padding: const EdgeInsets.symmetric(vertical: 10),
           ),
-          child: Text(
+          child: const Text(
             "Proceed",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),

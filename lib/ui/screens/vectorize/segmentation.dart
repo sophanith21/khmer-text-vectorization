@@ -122,12 +122,12 @@ class _SegmentationState extends State<Segmentation> {
             "Please select a text that you want to manually segment or fix.",
             style: TextStyle(fontSize: 16),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text(
             "Current Word Count: ${segmentedTextState.length}",
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // --- Segmented Texts Box ---
           Expanded(
@@ -137,7 +137,7 @@ class _SegmentationState extends State<Segmentation> {
                 border: Border.all(color: Colors.white, width: 1),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     blurRadius: 4,
                     blurStyle: BlurStyle.outer,
@@ -168,7 +168,7 @@ class _SegmentationState extends State<Segmentation> {
               ),
             ),
           ),
-          SizedBox(height: 26),
+          const SizedBox(height: 26),
 
           // --- Stepper Navigation Buttons ---
           Row(
@@ -176,17 +176,17 @@ class _SegmentationState extends State<Segmentation> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF666666),
+                  backgroundColor: const Color(0xFF666666),
                 ),
                 onPressed: widget.onBack,
-                child: Text(
+                child: const Text(
                   "Back",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               ElevatedButton(
                 onPressed: onStartLabellingPress,
-                child: Text(
+                child: const Text(
                   "Start Labelling",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -208,10 +208,10 @@ class _SegmentationState extends State<Segmentation> {
           return CustomDialog(
             title: "ERROR",
             contents: [
-              SizedBox(height: 20),
-              Text("Please make sure every word is segmented correctly."),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text("Please make sure every word is segmented correctly."),
+              const SizedBox(height: 20),
+              const Text(
                 "Tip: Make sure every word has green background.",
                 style: TextStyle(
                   color: Color(0xFFA3A3A3),
@@ -396,7 +396,7 @@ class _ManualSegmentDialogState extends State<ManualSegmentDialog> {
       title: "Manual Segment",
       contents: [
         const SizedBox(height: 20),
-        Text.rich(
+        const Text.rich(
           TextSpan(
             text: "To manually segment the ",
             children: <TextSpan>[
@@ -426,7 +426,7 @@ class _ManualSegmentDialogState extends State<ManualSegmentDialog> {
             maxLength: null,
             maxLines: null,
             keyboardType: TextInputType.multiline,
-            style: TextStyle(fontFamily: "KantumruyPro"),
+            style: const TextStyle(fontFamily: "KantumruyPro"),
           ),
         ),
         const SizedBox(height: 15),
@@ -455,13 +455,13 @@ class _ManualSegmentDialogState extends State<ManualSegmentDialog> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFC6C6C6),
-                  fixedSize: Size(113, 35),
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  fixedSize: const Size(113, 35),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                 ),
                 onPressed: () {
                   widget.setDialogState(true);
                 },
-                child: Text(
+                child: const Text(
                   "False Alarm",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -480,10 +480,10 @@ class _ManualSegmentDialogState extends State<ManualSegmentDialog> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
-                fixedSize: Size(113, 35),
-                padding: EdgeInsets.symmetric(vertical: 10),
+                fixedSize: const Size(113, 35),
+                padding: const EdgeInsets.symmetric(vertical: 10),
               ),
-              child: Text(
+              child: const Text(
                 "Confirm",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
@@ -515,7 +515,7 @@ class FalseAlarmDialog extends StatelessWidget {
       title: "False Alarm?",
       contents: [
         const SizedBox(height: 20),
-        Text(
+        const Text(
           "It seems the system is falsely identifying this term as a non-word. Please confirm the following action.",
         ),
         const SizedBox(height: 20),
@@ -526,13 +526,13 @@ class FalseAlarmDialog extends StatelessWidget {
             spacing: 15,
             children: [
               SegmentedBox(boxColor: boxColor, label: widget.label),
-              Icon(Icons.arrow_right_alt),
+              const Icon(Icons.arrow_right_alt),
               SegmentedBox(boxColor: invertBoxColor, label: widget.label),
             ],
           ),
         ),
         const SizedBox(height: 25),
-        Text(
+        const Text(
           "Note: This word will be saved to the dictionary to improve future text segmentation.",
           style: TextStyle(
             color: Color(0xFFA3A3A3),
@@ -549,13 +549,13 @@ class FalseAlarmDialog extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFC6C6C6),
-                  fixedSize: Size(113, 35),
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  fixedSize: const Size(113, 35),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                 ),
                 onPressed: () {
                   setDialogState(false);
                 },
-                child: Text(
+                child: const Text(
                   "Back",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -570,10 +570,10 @@ class FalseAlarmDialog extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
-                fixedSize: Size(113, 35),
-                padding: EdgeInsets.symmetric(vertical: 10),
+                fixedSize: const Size(113, 35),
+                padding: const EdgeInsets.symmetric(vertical: 10),
               ),
-              child: Text(
+              child: const Text(
                 "Confirm",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),

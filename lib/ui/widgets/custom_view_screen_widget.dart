@@ -20,7 +20,7 @@ class CustomViewScreenWidget extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
             shadows: [
@@ -42,7 +42,7 @@ class CustomViewScreenWidget extends StatelessWidget {
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () => {Navigator.pop(context)},
-              child: Icon(Icons.arrow_back, color: Colors.white),
+              child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
           ),
         ),
@@ -55,7 +55,7 @@ class CustomViewScreenWidget extends StatelessWidget {
             if (leading != null) leading!,
 
             Container(
-              margin: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+              margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
               color: Colors.black,
               width: double.infinity,
               height: 2,
