@@ -13,6 +13,7 @@ class Searchresult extends StatelessWidget {
     required this.selectedIndex,
     required this.onView,
     required this.onSelected,
+    this.onSelectAll,
   });
 
   final Map<Characters, int> dictionaryTexts;
@@ -21,8 +22,11 @@ class Searchresult extends StatelessWidget {
   final String topicSort;
 
   final Set<int>? selectedIndex;
-  final Function(Sample)? onView;
-  final Function(Sample)? onSelected;
+  final ValueChanged<Sample> onView;
+  final ValueChanged<Sample> onSelected;
+  final ValueChanged<List<Sample>>? onSelectAll;
+
+  bool get isSelectionMode => selectedIndex!.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -109,32 +113,69 @@ class Searchresult extends StatelessWidget {
             ),
           )
         : Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(15),
-              itemCount: filterSamples.length,
-              itemBuilder: (context, index) {
-                final currentSample = filterSamples[index];
-                return VectorizedTextBox(
-                  vecTitle: currentSample.name,
-                  vecDescription: currentSample.description,
-                  vecDate: currentSample.createdAt,
-                  vecLabel: currentSample.stanceLabel,
-                  vecQuality: currentSample.quality,
-                  isSelected: selectedIndex!.contains(currentSample.id),
-                  isSelectionMode: selectedIndex!.isNotEmpty,
-                  onSelected: () => onSelected!(currentSample),
+            child: Column(
+              children: [
+                if (isSelectionMode && onSelectAll != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          fixedSize: Size(113, 35),
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                        ),
+                        onPressed: () => onSelectAll!(filterSamples),
+                        child: Text("Select All"),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(color: Colors.black, width: 2),
+                          fixedSize: Size(113, 35),
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                        ),
+                        onPressed: () {
+                          onSelectAll!([]);
+                        },
+                        child: Text(
+                          "Deselect All",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(15),
+                    itemCount: filterSamples.length,
+                    itemBuilder: (context, index) {
+                      final currentSample = filterSamples[index];
+                      return VectorizedTextBox(
+                        isAnimated: true,
+                        vecTitle: currentSample.name,
+                        vecDescription: currentSample.description,
+                        vecDate: currentSample.createdAt,
+                        vecLabel: currentSample.stanceLabel,
+                        vecQuality: currentSample.quality,
+                        isSelected: selectedIndex!.contains(currentSample.id),
+                        isSelectionMode: isSelectionMode,
+                        onSelected: () => onSelected(currentSample),
 
-                  onView: () {
-                    if (selectedIndex!.isNotEmpty) {
-                      onSelected!(currentSample);
-                    } else {
-                      onView!(currentSample);
-                    }
-                  },
-                );
-              },
-              separatorBuilder: (context, index) =>
-                  const Divider(color: Colors.transparent),
+                        onView: () {
+                          if (isSelectionMode) {
+                            onSelected(currentSample);
+                          } else {
+                            onView(currentSample);
+                          }
+                        },
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        const Divider(color: Colors.transparent),
+                  ),
+                ),
+              ],
             ),
           );
 

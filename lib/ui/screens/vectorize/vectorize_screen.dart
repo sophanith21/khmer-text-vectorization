@@ -110,6 +110,7 @@ class _VectorizeScreenState extends State<VectorizeScreen> {
       descriptionController.clear();
 
       topicTags.clear();
+      stanceLabel = null;
       segmentedText = [];
       currentRawText = "";
     });
