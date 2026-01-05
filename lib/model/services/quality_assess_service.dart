@@ -46,6 +46,8 @@ class QualityAssessService {
     Set<String> noise = {'[ENG]', '[URL]', '[NUM]'};
     int noiseCount = 0;
 
+    if (segmentedText.isEmpty) return score;
+
     for (final word in segmentedText) {
       if (noise.contains(word.toString())) {
         noiseCount++;
@@ -75,6 +77,7 @@ class QualityAssessService {
 
   double _assessDiversity(List<Characters> segmentedText, double maxScore) {
     double score = 0;
+    if (segmentedText.isEmpty) return score;
     final Set<Characters> uniqueSegmentedText = segmentedText.toSet();
     score = uniqueSegmentedText.length / segmentedText.length * maxScore;
     return score;
