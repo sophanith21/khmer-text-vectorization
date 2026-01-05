@@ -42,6 +42,8 @@ class Collection extends StatefulWidget {
 
 class _CollectionState extends State<Collection> {
   SortType sortType = SortType.createNewToOld;
+  String topicState = "All";
+  int topicIndex = 0;
   late List<Sample> samples;
   late List<Sample> sortedSamples;
 
@@ -52,13 +54,21 @@ class _CollectionState extends State<Collection> {
     });
   }
 
-  String topicState = "All";
-  int topicIndex = 0;
   void onTopic(String selectedTopic, int index) {
     setState(() {
       topicState = selectedTopic;
       topicIndex = index;
       print(topicState + topicIndex.toString());
+    });
+  }
+
+  void onSelectAll(List<Sample> list) {
+    setState(() {
+      selectedIds.clear();
+      selectedIds.addAll([
+        for (final sample in list)
+          if (sample.id != null) sample.id!,
+      ]);
     });
   }
 
@@ -478,6 +488,7 @@ class _CollectionState extends State<Collection> {
               selectedIndex: selectedIds,
               onSelected: onSelected,
               onView: onView,
+              onSelectAll: onSelectAll,
             ),
           ],
         ),

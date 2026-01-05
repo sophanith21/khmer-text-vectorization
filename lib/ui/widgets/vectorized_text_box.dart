@@ -13,6 +13,7 @@ class VectorizedTextBox extends StatelessWidget {
     this.isSelectionMode = false,
     this.onView,
     this.onSelected,
+    this.isAnimated = false,
   });
 
   final String vecTitle;
@@ -25,6 +26,7 @@ class VectorizedTextBox extends StatelessWidget {
   final bool isSelectionMode;
   final VoidCallback? onView;
   final VoidCallback? onSelected;
+  final bool isAnimated;
 
   String get label => vecLabel != null
       ? vecLabel!
@@ -37,12 +39,13 @@ class VectorizedTextBox extends StatelessWidget {
   IconData get iconChecked => isSelected
       ? Icons.radio_button_checked_outlined
       : Icons.radio_button_unchecked_outlined;
-  double get positionSelected => isSelected ? 80 : 0;
+  double get positionSelected => isSelected ? 60 : 0;
 
   @override
   Widget build(BuildContext context) {
+    final double widgetWidth = MediaQuery.of(context).size.width - 47;
     return SizedBox(
-      height: 80,
+      height: 90,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -65,98 +68,200 @@ class VectorizedTextBox extends StatelessWidget {
             ),
           ),
 
-          Positioned.fill(
-            left: positionSelected,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: BoxBorder.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(13),
-              ),
-              child: ListTile(
-                onTap: onView,
-                onLongPress: onSelected,
-                title: Text(
-                  vecTitle,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis,
+          isAnimated
+              ? AnimatedPositioned(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  left: positionSelected,
+                  width: widgetWidth,
+                  top: 0,
+                  bottom: 4,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: BoxBorder.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    child: ListTile(
+                      onTap: onView,
+                      onLongPress: onSelected,
+                      title: Text(
+                        vecTitle,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            vecDescription,
+                            style: const TextStyle(fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          const SizedBox(height: 2),
+
+                          Text(
+                            vecDate.toString().split(" ")[0],
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ),
+
+                      isThreeLine: true,
+
+                      trailing: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                "Label: ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+
+                              const SizedBox(width: 5),
+
+                              Text(
+                                label,
+                                style: const TextStyle(
+                                  color: Color(0xFFAC7F5E),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Quality",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+
+                              const SizedBox(width: 5),
+
+                              CircleGraph(
+                                allPercentage: vecQuality,
+                                allPercentageValue: qualityValue,
+                                size: 20,
+                                isShowText: false,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : Positioned.fill(
+                  left: positionSelected,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: BoxBorder.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    child: ListTile(
+                      onTap: onView,
+                      onLongPress: onSelected,
+                      title: Text(
+                        vecTitle,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            vecDescription,
+                            style: const TextStyle(fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          const SizedBox(height: 2),
+
+                          Text(
+                            vecDate.toString().split(" ")[0],
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ),
+
+                      isThreeLine: true,
+
+                      trailing: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                "Label: ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+
+                              const SizedBox(width: 5),
+
+                              Text(
+                                label,
+                                style: const TextStyle(
+                                  color: Color(0xFFAC7F5E),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Quality",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+
+                              const SizedBox(width: 5),
+
+                              CircleGraph(
+                                allPercentage: vecQuality,
+                                allPercentageValue: qualityValue,
+                                size: 20,
+                                isShowText: false,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      vecDescription,
-                      style: const TextStyle(fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    const SizedBox(height: 2),
-
-                    Text(
-                      vecDate.toString().split(" ")[0],
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
-
-                isThreeLine: true,
-
-                trailing: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          "Label: ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
-
-                        const SizedBox(width: 5),
-
-                        Text(
-                          label,
-                          style: const TextStyle(color: Color(0xFFAC7F5E)),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Quality",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
-
-                        const SizedBox(width: 5),
-
-                        CircleGraph(
-                          allPercentage: vecQuality,
-                          allPercentageValue: qualityValue,
-                          size: 20,
-                          isShowText: false,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );

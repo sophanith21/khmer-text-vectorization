@@ -12,8 +12,8 @@ class Settings extends StatelessWidget {
 
   final Map<Characters, int> list;
 
-  void resetDialog(BuildContext context) {
-    showDialog(
+  void resetDialog(BuildContext context) async {
+    await showDialog(
       context: context,
       builder: (_) => Popup(
         title: "Reset to default",
@@ -63,9 +63,6 @@ class Settings extends StatelessWidget {
               }
               await ExportImportService.resetDictionary();
               await SegmentingService.instance.initDictionary();
-              if (context.mounted) {
-                Navigator.pop(context);
-              }
             },
             child: const Text(
               "Yes",
@@ -77,8 +74,8 @@ class Settings extends StatelessWidget {
     );
   }
 
-  void exportDictionaryDialog(BuildContext context) {
-    showDialog(
+  void exportDictionaryDialog(BuildContext context) async {
+    await showDialog(
       context: context,
       builder: (_) => Popup(
         title: "Export",
@@ -118,8 +115,8 @@ class Settings extends StatelessWidget {
     );
   }
 
-  void importDialog(BuildContext context) {
-    showDialog(
+  void importDialog(BuildContext context) async {
+    await showDialog(
       context: context,
       builder: (_) => ImportDictionaryDialog(refreshData: refreshData),
     );
