@@ -78,7 +78,10 @@ class _MyAppState extends State<MyApp> {
                 futureData: samples,
                 defaultValue: [],
                 builder: (context, samples) {
-                  return Dashboard(allSamples: samples);
+                  return Dashboard(
+                    allSamples: samples,
+                    refreshData: refreshData,
+                  );
                 },
               ),
 

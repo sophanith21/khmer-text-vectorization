@@ -7,9 +7,14 @@ import 'package:khmer_text_vectorization/ui/widgets/filterDate.dart';
 import 'package:khmer_text_vectorization/ui/widgets/circle_graph.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key, required this.allSamples});
+  const Dashboard({
+    super.key,
+    required this.allSamples,
+    required this.refreshData,
+  });
 
   final List<Sample> allSamples;
+  final VoidCallback refreshData;
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -50,8 +55,8 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void onView(Sample selectedSample) {
-    Navigator.push(
+  Future<void> onView(Sample selectedSample) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
@@ -59,6 +64,8 @@ class _DashboardState extends State<Dashboard> {
         },
       ),
     );
+
+    widget.refreshData();
   }
 
   @override
