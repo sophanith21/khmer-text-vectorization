@@ -67,7 +67,7 @@ class _DictionaryState extends State<Dictionary> {
                     border: Border.all(color: Colors.white, width: 1),
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
-                      BoxShadow(
+                      const BoxShadow(
                         color: Colors.black,
                         offset: Offset(0, 0),
                         blurRadius: 4,
@@ -75,11 +75,14 @@ class _DictionaryState extends State<Dictionary> {
                       ),
                     ],
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-                  margin: EdgeInsets.all(5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 9,
+                  ),
+                  margin: const EdgeInsets.all(5),
                   child: Text(
                     filteredList[index].key.string,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: "KantumruyPro",
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -98,7 +101,7 @@ class _DictionaryState extends State<Dictionary> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: SearchBar(
-                trailing: [Icon(Icons.search)],
+                trailing: [const Icon(Icons.search)],
                 hintText: "Search",
                 shape: WidgetStatePropertyAll(
                   RoundedRectangleBorder(
@@ -122,7 +125,7 @@ class _DictionaryState extends State<Dictionary> {
           ),
           IconButton(
             onPressed: onAddWord,
-            icon: Icon(Icons.add_circle_outline),
+            icon: const Icon(Icons.add_circle_outline),
             iconSize: 32,
           ),
         ],
@@ -168,7 +171,7 @@ class _AddNewWordDialogState extends State<AddNewWordDialog> {
     return CustomDialog(
       title: "Add new word",
       contents: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         SizedBox(
           height: 120,
           child: TextField(
@@ -178,12 +181,12 @@ class _AddNewWordDialogState extends State<AddNewWordDialog> {
             maxLength: null,
             maxLines: null,
             keyboardType: TextInputType.multiline,
-            style: TextStyle(fontFamily: "KantumruyPro"),
+            style: const TextStyle(fontFamily: "KantumruyPro"),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         if (newWord.isNotEmpty) SegmentedBox(label: newWord),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
             if (newWord.isNotEmpty) {
@@ -195,9 +198,9 @@ class _AddNewWordDialogState extends State<AddNewWordDialog> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
             fixedSize: Size(113, 35),
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
           ),
-          child: Text(
+          child: const Text(
             "Confirm Add",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
@@ -246,9 +249,9 @@ class _EditingWordDialogState extends State<EditingWordDialog> {
     return CustomDialog(
       title: "Edit word",
       contents: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         SegmentedBox(label: widget.word.key.string),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         SizedBox(
           height: 120,
           child: TextField(
@@ -259,14 +262,14 @@ class _EditingWordDialogState extends State<EditingWordDialog> {
             maxLength: null,
             maxLines: null,
             keyboardType: TextInputType.multiline,
-            style: TextStyle(fontFamily: "KantumruyPro"),
+            style: const TextStyle(fontFamily: "KantumruyPro"),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         if (newText.isNotEmpty) SegmentedBox(label: newText),
         SizedBox(height: 20),
         if (!deletable)
-          Text(
+          const Text(
             "Note: Delete is disabled because your samples are using the word.",
             style: TextStyle(
               color: Color(0xFFA3A3A3),
@@ -274,7 +277,7 @@ class _EditingWordDialogState extends State<EditingWordDialog> {
               fontWeight: FontWeight.bold,
             ),
           ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 25,
@@ -283,14 +286,14 @@ class _EditingWordDialogState extends State<EditingWordDialog> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFFC6C6C6),
                 fixedSize: Size(113, 35),
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
               ),
               onPressed: deletable
                   ? () {
                       Navigator.pop(context, true);
                     }
                   : null,
-              child: Text(
+              child: const Text(
                 "Delete word",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -310,9 +313,9 @@ class _EditingWordDialogState extends State<EditingWordDialog> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 fixedSize: Size(113, 35),
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
               ),
-              child: Text(
+              child: const Text(
                 "Confirm Edit",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),

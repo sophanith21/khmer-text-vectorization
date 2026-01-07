@@ -81,13 +81,13 @@ class SelectedScreen extends StatelessWidget {
     return isSelected
         ? Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           )
-        : SizedBox.shrink();
+        : const SizedBox.shrink();
   }
 
   BoxDecoration? get decoration {
@@ -106,7 +106,7 @@ class SelectedScreen extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         height: 50,
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         decoration: decoration,
         child: Row(
           spacing: 9,

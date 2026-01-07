@@ -122,23 +122,23 @@ class Searchresult extends StatelessWidget {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
-                          fixedSize: Size(113, 35),
-                          padding: EdgeInsets.symmetric(vertical: 10),
+                          fixedSize: const Size(113, 35),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                         ),
                         onPressed: () => onSelectAll!(filterSamples),
-                        child: Text("Select All"),
+                        child: const Text("Select All"),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          side: BorderSide(color: Colors.black, width: 2),
-                          fixedSize: Size(113, 35),
-                          padding: EdgeInsets.symmetric(vertical: 10),
+                          side: const BorderSide(color: Colors.black, width: 2),
+                          fixedSize: const Size(113, 35),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                         ),
                         onPressed: () {
                           onSelectAll!([]);
                         },
-                        child: Text(
+                        child: const Text(
                           "Deselect All",
                           style: TextStyle(color: Colors.black),
                         ),

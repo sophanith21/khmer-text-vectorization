@@ -103,26 +103,26 @@ class _DataLabellingState extends State<DataLabelling> {
                   "Please label the text before and giving the correct information of tags",
                   style: TextStyle(fontSize: 16),
                 ),
-                SizedBox(height: 28),
+                const SizedBox(height: 28),
 
                 // --- Stance Label ---
                 const Text(
                   "STANCE LABEL",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                SizedBox(height: 11),
+                const SizedBox(height: 11),
                 CustomBinaryRadioMenu(
                   selectedStance: selectedStance,
                   onStanceTap: onStanceTap,
                 ),
-                SizedBox(height: 28),
+                const SizedBox(height: 28),
 
                 // --- Topic Tags ---
                 const Text(
                   "TOPIC TAGS",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                SizedBox(height: 11),
+                const SizedBox(height: 11),
                 Flexible(
                   child: Container(
                     decoration: BoxDecoration(
@@ -130,7 +130,7 @@ class _DataLabellingState extends State<DataLabelling> {
                       border: Border.all(color: Colors.white, width: 1),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black,
                           blurRadius: 4,
                           blurStyle: BlurStyle.outer,
@@ -139,7 +139,7 @@ class _DataLabellingState extends State<DataLabelling> {
                       ],
                     ),
 
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     child: SingleChildScrollView(
                       child: Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
@@ -156,13 +156,13 @@ class _DataLabellingState extends State<DataLabelling> {
                           GestureDetector(
                             onTap: onAdd,
                             child: Container(
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Color(0xFFD2E9E6),
                               ),
                               width: 25,
                               height: 25,
-                              child: Icon(Icons.add, size: 15),
+                              child: const Icon(Icons.add, size: 15),
                             ),
                           ),
                         ],
@@ -173,7 +173,7 @@ class _DataLabellingState extends State<DataLabelling> {
               ],
             ),
           ),
-          SizedBox(height: 26),
+          const SizedBox(height: 26),
 
           // --- Steppers Navigation Buttons ---
           Row(
@@ -181,17 +181,17 @@ class _DataLabellingState extends State<DataLabelling> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF666666),
+                  backgroundColor: const Color(0xFF666666),
                 ),
                 onPressed: widget.onBack,
-                child: Text(
+                child: const Text(
                   "Back",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               ElevatedButton(
                 onPressed: widget.onNext,
-                child: Text(
+                child: const Text(
                   "Continue",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -293,7 +293,7 @@ class _EditTagsDialogState extends State<EditTagsDialog> {
                     onAddInDialog(newTag);
                   },
                   icon: const Icon(Icons.add, size: 20),
-                  padding: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
                 ),
               ],
 
@@ -322,7 +322,7 @@ class _EditTagsDialogState extends State<EditTagsDialog> {
             border: Border.all(color: Colors.white, width: 1),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
-              BoxShadow(
+              const BoxShadow(
                 color: Colors.black,
                 blurRadius: 4,
                 blurStyle: BlurStyle.outer,
@@ -355,10 +355,10 @@ class _EditTagsDialogState extends State<EditTagsDialog> {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
-            fixedSize: Size(113, 35),
-            padding: EdgeInsets.symmetric(vertical: 10),
+            fixedSize: const Size(113, 35),
+            padding: const EdgeInsets.symmetric(vertical: 10),
           ),
-          child: Text(
+          child: const Text(
             "Confirm",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
@@ -442,7 +442,7 @@ class CustomBinaryRadioMenu extends StatelessWidget {
                 color: positiveBgColor,
                 borderRadius: BorderRadius.circular(10),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
 
               child: Row(
                 spacing: 10,
@@ -476,7 +476,7 @@ class CustomBinaryRadioMenu extends StatelessWidget {
                 color: negativeBgColor,
                 borderRadius: BorderRadius.circular(10),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
 
               child: Row(
                 spacing: 10,

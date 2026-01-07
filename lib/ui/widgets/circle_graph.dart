@@ -78,7 +78,7 @@ class CircleGraph extends StatelessWidget {
                     ),
                   ],
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ],
       ),
     );

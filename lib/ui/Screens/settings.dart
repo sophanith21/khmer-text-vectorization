@@ -50,7 +50,9 @@ class Settings extends StatelessWidget {
         ),
         actions: [
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF666666)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF666666),
+            ),
             onPressed: () => Navigator.pop(context),
             child: const Text(
               "No",
@@ -142,7 +144,7 @@ class Settings extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(
-                color: Color(0xFFF9FAFB),
+                color: const Color(0xFFF9FAFB),
                 border: Border.all(color: Color(0xFFD9D9D9)),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -229,7 +231,7 @@ class Settings extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(
-                color: Color(0xFFF9FAFB),
+                color: const Color(0xFFF9FAFB),
                 border: Border.all(color: Color(0xFFD9D9D9)),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -327,7 +329,7 @@ class _ImportDictionaryDialogState extends State<ImportDictionaryDialog> {
 
             label: Text(
               result != null ? result!.files.single.name : "Select file",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,

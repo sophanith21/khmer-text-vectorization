@@ -153,7 +153,7 @@ class _CollectionState extends State<Collection> {
           title: "Delete sample(s)",
           crossAxisAlignment: CrossAxisAlignment.center,
           contents: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               "Deleting the sample is irreversible.",
               style: TextStyle(
@@ -161,14 +161,14 @@ class _CollectionState extends State<Collection> {
                 color: const Color.fromARGB(255, 156, 28, 19),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text("Number of Items: ${selectedIds.length}"),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 75, 7, 2),
-                fixedSize: Size(113, 35),
-                padding: EdgeInsets.symmetric(vertical: 10),
+                fixedSize: const Size(113, 35),
+                padding: const EdgeInsets.symmetric(vertical: 10),
               ),
               onPressed: () async {
                 Navigator.pop(context);
@@ -204,7 +204,7 @@ class _CollectionState extends State<Collection> {
 
             Text(
               "${selectedIds.length} item(s)",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
             ),
 
             const SizedBox(height: 20),
@@ -212,7 +212,9 @@ class _CollectionState extends State<Collection> {
         ),
         actions: [
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF666666)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF666666),
+            ),
             onPressed: () => Navigator.pop(context),
             child: const Text(
               "No",

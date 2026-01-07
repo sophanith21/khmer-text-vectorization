@@ -54,8 +54,8 @@ class _KHTextInputState extends State<KHTextInput> {
               ],
             ),
           ),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             "Tip: For optimal vectorization and segmentation, aim for a length of 21–150 words.",
             style: TextStyle(
               color: Color(0xFFA3A3A3),
@@ -64,7 +64,7 @@ class _KHTextInputState extends State<KHTextInput> {
             ),
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           // --- Input Field ---
           Expanded(
             child: TextField(
@@ -74,10 +74,10 @@ class _KHTextInputState extends State<KHTextInput> {
               maxLength: null,
               maxLines: null,
               keyboardType: TextInputType.multiline,
-              style: TextStyle(fontFamily: "KantumruyPro"),
+              style: const TextStyle(fontFamily: "KantumruyPro"),
             ),
           ),
-          SizedBox(height: 26),
+          const SizedBox(height: 26),
 
           // --- Stepper Navigation Buttons ---
           Row(
@@ -85,10 +85,10 @@ class _KHTextInputState extends State<KHTextInput> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF666666),
+                  backgroundColor: const Color(0xFF666666),
                 ),
                 onPressed: null,
-                child: Text(
+                child: const Text(
                   "Back",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -102,8 +102,8 @@ class _KHTextInputState extends State<KHTextInput> {
                         return CustomDialog(
                           title: "ERROR",
                           contents: [
-                            SizedBox(height: 20),
-                            Text("Input must not be empty."),
+                            const SizedBox(height: 20),
+                            const Text("Input must not be empty."),
                           ],
                         );
                       },
@@ -111,7 +111,7 @@ class _KHTextInputState extends State<KHTextInput> {
                   }
                   widget.onNext(textController.text);
                 },
-                child: Text(
+                child: const Text(
                   "Start Segmenting",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),

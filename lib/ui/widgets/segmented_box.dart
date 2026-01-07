@@ -23,7 +23,7 @@ class SegmentedBox extends StatelessWidget {
         color: boxColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       child: Text(
         text,
         style: GoogleFonts.kantumruyPro(
