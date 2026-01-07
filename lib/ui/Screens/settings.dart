@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:khmer_text_vectorization/model/services/export_import_service.dart';
 import 'package:khmer_text_vectorization/model/services/segmenting_service.dart';
+import 'package:khmer_text_vectorization/model/services/suggest_tags_service.dart';
 import 'package:khmer_text_vectorization/ui/screens/dictionary.dart';
 import 'package:khmer_text_vectorization/ui/widgets/pop_up.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -63,6 +64,7 @@ class Settings extends StatelessWidget {
               }
               await ExportImportService.resetDictionary();
               await SegmentingService.instance.initDictionary();
+              await SuggestTagsService.instance.initSuggestTags();
             },
             child: const Text(
               "Yes",

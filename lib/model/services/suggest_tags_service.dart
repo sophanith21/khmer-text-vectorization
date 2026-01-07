@@ -14,6 +14,11 @@ class SuggestTagsService {
     }
   }
 
+  Future<void> initSuggestTags() async {
+    _suggestionTags.clear();
+    _suggestionTags.addAll(await AppDatabase.instance.getAllTags());
+  }
+
   Future<Set<TopicTag>> get suggestionTags async {
     if (_suggestionTags.isEmpty) {
       _suggestionTags.addAll(await AppDatabase.instance.getAllTags());

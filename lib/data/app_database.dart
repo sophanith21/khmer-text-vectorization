@@ -310,6 +310,30 @@ class AppDatabase {
     for (final tag in result) {
       topicTags.add(TopicTag.fromMap(tag));
     }
+
+    // init the topic tags table
+    if (topicTags.isEmpty) {
+      List<String> assetTags = await _readLinesFromAssets(
+        "assets/factory_topic_tags.txt",
+      );
+      final batch = db.batch();
+      for (final tag in assetTags) {
+        batch.insert(_topicTagsTable, {
+          _colTag: tag,
+        }, conflictAlgorithm: ConflictAlgorithm.ignore);
+      }
+      await batch.commit();
+
+      final List<Map<String, dynamic>> secondQuery = await db.rawQuery('''
+      SELECT * FROM $_topicTagsTable
+      ''');
+
+      for (final tag in secondQuery) {
+        topicTags.add(
+          TopicTag(id: tag[_colId] as int, tagName: tag[_colTag] as String),
+        );
+      }
+    }
     return topicTags;
   }
 

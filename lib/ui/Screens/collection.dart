@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:khmer_text_vectorization/model/sample.dart';
 import 'package:khmer_text_vectorization/model/services/export_import_service.dart';
 import 'package:khmer_text_vectorization/model/services/sample_persistence_service.dart';
@@ -108,12 +109,12 @@ class _CollectionState extends State<Collection> {
   final Set<int> selectedIds = {};
   bool get isSelectionMode => selectedIds.isNotEmpty;
 
-  void onView(Sample selectedSample) {
+  void onView(Sample selectedSample) async {
     if (isSelectionMode) {
       onSelected(selectedSample);
       print("onview selected");
     } else {
-      Navigator.push(
+      await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
@@ -121,6 +122,8 @@ class _CollectionState extends State<Collection> {
           },
         ),
       );
+
+      widget.refreshData();
     }
   }
 
@@ -270,39 +273,21 @@ class _CollectionState extends State<Collection> {
         break;
 
       case SortType.labelGoodToBad:
-        sorted.sort(
-          (a, b) =>
-              (b.stanceLabel != null
-                      ? b.stanceLabel!
-                            ? 1
-                            : 0
-                      : -1)
-                  .compareTo(
-                    a.stanceLabel != null
-                        ? b.stanceLabel!
-                              ? 1
-                              : 0
-                        : -1,
-                  ),
-        );
+        sorted.sort((a, b) {
+          int valueA = a.stanceLabel == null ? 0 : (a.stanceLabel! ? 2 : 1);
+          int valueB = b.stanceLabel == null ? 0 : (b.stanceLabel! ? 2 : 1);
+
+          return valueB.compareTo(valueA);
+        });
         break;
 
       case SortType.labelBadToGood:
-        sorted.sort(
-          (a, b) =>
-              (a.stanceLabel != null
-                      ? b.stanceLabel!
-                            ? 1
-                            : 0
-                      : -1)
-                  .compareTo(
-                    b.stanceLabel != null
-                        ? b.stanceLabel!
-                              ? 1
-                              : 0
-                        : -1,
-                  ),
-        );
+        sorted.sort((a, b) {
+          int valueA = a.stanceLabel == null ? 0 : (a.stanceLabel! ? 2 : 1);
+          int valueB = b.stanceLabel == null ? 0 : (b.stanceLabel! ? 2 : 1);
+
+          return valueA.compareTo(valueB);
+        });
         break;
     }
 
